@@ -72,7 +72,7 @@ marks where the piece must stand. Insert fit is `INSERT_CLEAR` (0.15 mm radial).
 | 4 | M3 × 6 self-tapping screw | ULN2003 board to its standoffs |  |
 | 2 | M5 × 16 socket-head (Allen) screw | arm to the base: heads sunk in the arm's plate (Ø 9.5 counterbores), threaded into the base's pad (modelled M5 thread, 13 mm) |  |
 | 1 | M5 × 35 hex bolt + M5 nut | tower to the arm (head in the arm's channel, nut in the tower knob) |  |
-| 1 | M5 × 35 hex bolt + M5 nut | tilt axis: head in the hex recess on the cradle's left ear, screwed through its printed M5 thread, nut in the M5 knob |  |
+| 1 | M5 × 30 hex bolt + M5 nut | tilt axis: head in the hex recess on the cradle's left ear, screwed through its printed M5 thread, nut in the M5 knob |  |
 | 2 | M5 × 40 hex bolt + M5 nut | jaws: head in the hex recess in the jaw's front, threaded right through the jaw, nut in the jaw knob |  |
 | 1 | TTP223 capacitive touch module, 15 × 11 mm, 2.5–5.5 V | start/stop, behind the base wall | [Gebildet, Amazon.it](https://www.amazon.it/dp/B0FPQZN4N9): €6.99 for 30 |
 | 1 | 1/4"-20 hex nut (7/16" across flats) | tripod adapter (optional) |  |
