@@ -15,10 +15,10 @@ import adsk.fusion
 # --- Platter and mat ----------------------------------------------------------------------------------------------
 PLATTER_D = 240.0
 PLATTER_T = 8.0             # top at PLATTER_Z0 + PLATTER_T
-RING_R = 112.0              # TurntableMat.RingRadius: 8 mm in from the platter's edge (scan3dapp 4d6b60e)
+RING_R = 110.0              # TurntableMat.RingRadius: 5.5 mm solid rim outside each dot (scan3dapp 36e050f)
 DOT_D = 9.0                 # TurntableMat.DotRadius * 2
 HOLE_D = 4.5                # TurntableMat.HoleRadius * 2
-FREE_R = 100.0              # TurntableMat.FreeRadius: dashed groove, the piece stands inside it
+FREE_R = 98.0               # TurntableMat.FreeRadius: dashed groove, the piece stands inside it
 MAT_CODE = "100100001100101100111101000111011010"   # TurntableMat.Code, 1 = ring dot (with a hole)
 INSERT_DEPTH = 2.4
 INSERT_CLEAR = 0.15         # radial, between an insert and its pocket
