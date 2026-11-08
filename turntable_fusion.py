@@ -828,6 +828,10 @@ FILLETS = [
 ]]
 FILLETS += [("Ganascia sinistra", r, (-a[0], a[1], a[2]), (-p[0], p[1], p[2]), t0, t1)
             for name, r, a, p, t0, t1 in FILLETS if name == "Ganascia destra"]
+# Fillets on circular edges, also made by hand and read back: (part, radius, the edge's centre, the edge's radius).
+FILLET_CIRCLES = [
+    ("Base", 3.0, (0.0, 0.0, BASE_FLOOR), 10.0),   # the central boss's foot on the floor
+]
 
 
 # --- Test prints --------------------------------------------------------------------------------------------------
@@ -1010,13 +1014,41 @@ def apply_fillets(root):
             missing.append(f"{part} r{r} at {p}")
             continue
         groups.setdefault((part, r), (occs[0].component, adsk.core.ObjectCollection.create()))[1].add(best)
-    for (part, r), (comp, edges) in groups.items():
+    for part, r, c, rc in FILLET_CIRCLES:
+        occs = [o for o in root.occurrences if o.component.name == part]
+        edges = [e for o in occs[:1] for e in o.component.bRepBodies.item(0).edges
+                 if isinstance(e.geometry, adsk.core.Circle3D) and abs(e.geometry.radius * 10 - rc) < 0.01
+                 and max(abs(e.geometry.center.x * 10 - c[0]), abs(e.geometry.center.y * 10 - c[1]),
+                         abs(e.geometry.center.z * 10 - c[2])) < 0.01]
+        if not edges:
+            missing.append(f"{part} r{r} circle {rc} at {c}")
+            continue
+        groups.setdefault((part, r), (occs[0].component, adsk.core.ObjectCollection.create()))[1].add(edges[0])
+    def fillet(comp, edges, r):
         inp = comp.features.filletFeatures.createInput()
         inp.edgeSetInputs.addConstantRadiusEdgeSet(edges, adsk.core.ValueInput.createByReal(r / 10), False)
         comp.features.filletFeatures.add(inp)
+
+    for (part, r), (comp, edges) in groups.items():
+        try:
+            fillet(comp, edges, r)
+        except RuntimeError:
+            # One edge that cannot take the fillet fails the whole set: put them on one by one (found again by a point
+            # on each, as every fillet remakes the body's edges) and report the ones that fail.
+            for p in [edges.item(i).pointOnEdge for i in range(edges.count)]:
+                found = comp.findBRepUsingPoint(p, adsk.fusion.BRepEntityTypes.BRepEdgeEntityType, 0.001, False)
+                if found.count:
+                    one = adsk.core.ObjectCollection.create()
+                    one.add(found.item(0))
+                    try:
+                        fillet(comp, one, r)
+                        continue
+                    except RuntimeError:
+                        pass
+                missing.append(f"{part} r{r} failed at ({p.x * 10:.2f}, {p.y * 10:.2f}, {p.z * 10:.2f})")
     if missing:
         print("fillets not found:", missing)
-    return len(FILLETS) - len(missing)
+    return len(FILLETS) + len(FILLET_CIRCLES) - len(missing)
 
 
 def thread_holes(root, part, diameter, thread):
@@ -1091,6 +1123,6 @@ def run(_context):
     # Back to parametric so Fusion shows the timeline and records any edits made by hand from here on (a new run of
     # the script starts over in direct modelling and drops that history).
     design.designType = adsk.fusion.DesignTypes.ParametricDesignType
-    print(f"{n_fillets}/{len(FILLETS)} hand fillets re-applied")
+    print(f"{n_fillets}/{len(FILLETS) + len(FILLET_CIRCLES)} hand fillets re-applied")
     print(f"{len(printed)} printed parts, {len(filled)} filled + {len(rings)} ring inserts; "
           f"stand post at y = {py:.1f} mm")

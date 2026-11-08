@@ -91,12 +91,12 @@ PLA or PETG. Volumes are of the solid parts as modelled; with the usual walls an
 | Pignone | 1 | any | 1.1 | 1 |
 | Braccio | 1 | any | 74.7 | 93 |
 | Torre | 1 | any | 39.3 | 49 |
-| Supporto piastra | 1 | any | 24.5 | 30 |
-| Ganascia sinistra, Ganascia destra | 1 + 1 | any | 27.6 | 34 |
+| Supporto piastra | 1 | any | 25.6 | 32 |
+| Ganascia sinistra, Ganascia destra | 1 + 1 | any | 35.7 | 44 |
 | Pomello torre | 1 | any | 5.0 | 6 |
 | Pomello M5 + Pomelli ganasce | 1 + 2 | any | 10.3 | 13 |
 | Attacco treppiede (optional) | 1 | any | 16.1 | 20 |
-| **Turntable and stand** | | | **815** | **≈ 1010** |
+| **Turntable and stand** | | | **824** | **≈ 1020** |
 | Test prints (`Prova ...`, all eight) | | any | 100 | 124 |
 
 ## Wiring
