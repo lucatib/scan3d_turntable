@@ -651,7 +651,9 @@ def cradle_plate(root):
     union(body, cyl_pts((-9.2 - pd, hy, 12), (-9.1, hy, 12), 14))
     head = frame(prisms(root, [hexagon(af)], 0, pd + 1)[0], (-9.2, hy, 12), (0, 1, 0), (0, 0, 1), (-1, 0, 0))
     # Tilted forward, the plate's bottom swings back over the tower's tab: a notch lets it through.
-    cut(body, cyl_pts((-10 - pd, hy, 12), (10, hy, 12), 5.3), box(-4.2, 4.2, back - 1, front + 1, -1, 8), head)
+    # The left ear's hole is threaded M5 (after building); the right ear's is clear for the bolt.
+    cut(body, cyl_pts((-10 - pd, hy, 12), (-4.0, hy, 12), JAW_THREAD_HOLE), cyl_pts((4.0, hy, 12), (10, hy, 12), 5.3),
+        box(-4.2, 4.2, back - 1, front + 1, -1, 8), head)
     return move(body, *cradle_origin())
 
 
@@ -985,7 +987,7 @@ def run(_context):
     for name in ("Base", "Prova motore"):
         thread_holes(root, name, MOTOR_SCREW_HOLE, MOTOR_THREAD)
     thread_holes(root, "Base", ARM_SCREW_HOLE, ARM_THREAD)
-    for name in ("Ganascia sinistra", "Ganascia destra", "Prova asole"):
+    for name in ("Ganascia sinistra", "Ganascia destra", "Prova asole", "Supporto piastra"):
         thread_holes(root, name, JAW_THREAD_HOLE, JAW_THREAD)
     esp_model(root)
     motor_model(root)
