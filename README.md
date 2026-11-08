@@ -53,7 +53,7 @@ face. Also try the M5 and M6 nuts in one Pomello M5 and Pomello M6, which you ne
 | Dado asse | any | collar down, 100 % infill: the M8 bolt cuts its thread in it |
 | Attacco treppiede | any | block on the bed, nut slot on the side, no supports (optional, see below) |
 
-The dots sit exactly where the paper mat has them (ring Ø220, with a solid 5.5 mm rim outside each dot, dots Ø9, holes Ø4.5; the piece stands inside Ø196) and the same way round seen from
+The dots sit exactly where the paper mat has them (ring Ø200, 20 mm in from the platter's edge so it stays in view of a phone 29 cm away, dots Ø9, holes Ø4.5; the piece stands inside Ø176) and the same way round seen from
 above, so the mat code reads the same. The white centre of a ring dot is a post of the platter; the dashed groove
 marks where the piece must stand. Insert fit is `INSERT_CLEAR` (0.15 mm radial).
 
