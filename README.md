@@ -126,7 +126,8 @@ GND) at the bottom edge.
 
 - Power it from the ESP32's **3V3**, not 5 V: its output goes straight into GPIO 15, which takes 3.3 V at most.
 - **Solder pad A** (active low): the output then goes low while touched, which is what the firmware's button input
-  expects (GPIO 15, short touch start/stop, long touch reverse). Leave pad B open: momentary, not toggle.
+  expects on GPIO 15: a short touch starts or stops with the ramp, a double touch reverses; held while stopped it
+  starts and speeds up to full speed, held while turning it slows down to the slowest. Leave pad B open: momentary, not toggle.
 - `Prova touch` is a piece of the 2 mm wall with the holder, to check the touch works through your print.
 
 Move it with `TOUCH_ANGLE` and `TOUCH_Z`.
