@@ -89,10 +89,12 @@ LABEL_CLEAR = 0.1           # the printed letters are this much smaller all roun
 ESP_MODEL_ID = "urn:adsk.wipprod:dm.lineage:Oi68pfRvQISsIDWMEH-G4Q"
 ESP_L, ESP_W, ESP_PCB = 57.0, 28.3, 1.5
 ESP_PIN_X = 12.7            # pin rows, from the board's middle; header plastic 2.54 wide around them
-ESP_UNDER = 21.0            # clear height under the board for the pins and the Dupont plugs
+# The board is level with the touch module (its middle at TOUCH_Z): about 15 mm under it, enough for the pins
+# and right-angle Dupont plugs or soldered wires, not for straight Dupont plugs.
 ESP_USB_X = -111.2          # the board's USB end, just inside the wall
 ESP_SNAPS = (10.0, 46.0)    # snap lips along the board, from its USB end
 USB_NOTCH_W = 25.0          # the opening for the plugs; narrower than the board
+USB_NOTCH_R = 4.0           # its bottom corners' radius
 
 # --- Phone stand --------------------------------------------------------------------------------------------------
 # Adjustable cradle: a back plate with two slots, and two jaws with a V groove that take the phone's edges, whatever
@@ -492,10 +494,14 @@ def touch_dummy():
     return radial(body, TOUCH_ANGLE)
 
 
+def esp_underside():
+    return TOUCH_Z - ESP_PCB / 2
+
+
 def esp_holder():
     """(solids to add, solids to cut) of the ESP32 holder, in base coordinates."""
     x0, x1, hw = ESP_USB_X, ESP_USB_X + ESP_L, ESP_W / 2
-    h = BASE_FLOOR + ESP_UNDER                  # underside of the board
+    h = esp_underside()
     top = h + ESP_PCB
     rib = ESP_PIN_X - 1.27 - 0.6                # clear of the header plastic and the Dupont plugs
     adds = [box(x0 + 2, x0 + 8, -rib, rib, 0, h), box(x1 - 9, x1 - 3, -rib, rib, 0, h),
@@ -506,13 +512,17 @@ def esp_holder():
         for ly in ESP_SNAPS:
             adds += [box(x0 + ly - 3, x0 + ly + 3, y_post[0], y_post[1], 0, top + 0.9),
                      box(x0 + ly - 3, x0 + ly + 3, y_lip[0], y_lip[1], top + 0.3, top + 0.9)]
-    cuts = [box(-BASE_D, x0, -USB_NOTCH_W / 2, USB_NOTCH_W / 2, h - 3, BASE_TOP + 1)]
+    # Open at the top (under the platter's rim), bottom corners rounded.
+    r, w2, zb = USB_NOTCH_R, USB_NOTCH_W / 2, h - 3
+    cuts = [box(-BASE_D, x0, -w2, w2, zb + r, BASE_TOP + 1), box(-BASE_D, x0, -w2 + r, w2 - r, zb, BASE_TOP + 1),
+            cyl_pts((-BASE_D, -w2 + r, zb + r), (x0, -w2 + r, zb + r), 2 * r),
+            cyl_pts((-BASE_D, w2 - r, zb + r), (x0, w2 - r, zb + r), 2 * r)]
     return adds, cuts
 
 
 def esp_model(root):
     """The real board, from the Fusion project, placed in its holder; a plain box when the file cannot be found."""
-    x0, top = ESP_USB_X, BASE_FLOOR + ESP_UNDER + ESP_PCB
+    x0, top = ESP_USB_X, esp_underside() + ESP_PCB
     m = adsk.core.Matrix3D.create()
     m.setWithCoordinateSystem(P(x0, 0, top), V(0, -1, 0), V(1, 0, 0), V(0, 0, 1))   # model: USB end at y = 0, top at z = 0
     f = app.data.findFileById(ESP_MODEL_ID)
