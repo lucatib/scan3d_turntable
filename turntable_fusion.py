@@ -956,7 +956,7 @@ def run(_context):
     filled, rings = inserts()
     py = post_y()
     knob_tower = move(knob(root, 24, 14, 8.2, 4.5, 5.3), 0, py - 35, 18)   # M5, 4 mm taller: the M5 x 35 ends in it
-    knob5 = frame(knob(root, 24, 10, 8.2, 4.5, 5.3), (9.7, py, HINGE_Z), (0, 1, 0), (0, 0, 1), (1, 0, 0))
+    knob5 = frame(knob(root, 24, 6, 8.2, 4.5, 5.3), (9.7, py, HINGE_Z), (0, 1, 0), (0, 0, 1), (1, 0, 0))
     printed = [
         ("Base", [base(root)]),
         ("Piatto", [platter(root)]),
