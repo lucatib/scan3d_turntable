@@ -76,7 +76,7 @@ marks where the piece must stand. Insert fit is `INSERT_CLEAR` (0.15 mm radial).
 | 2 | M5 × 20 hex bolt + M5 nut | jaws (head in the jaw, nut in the jaw knob) |  |
 | 1 | TTP223 capacitive touch module, 15 × 11 mm, 2.5–5.5 V | start/stop, behind the base wall | [Gebildet, Amazon.it](https://www.amazon.it/dp/B0FPQZN4N9): €6.99 for 30 |
 | 1 | 1/4"-20 hex nut (7/16" across flats) | tripod adapter (optional) |  |
-| ~8 | Dupont female–female jumper wires | ESP32 to ULN2003 (IN1–IN4, 5 V, GND) and the button |  |
+| ~9 | Dupont female–female jumper wires | ESP32 to ULN2003 (IN1–IN4, 5 V, GND) and to the touch module (I/O, 3V3, GND) |  |
 | 1 | USB-C cable and 5 V USB supply | powers everything through the ESP32 |  |
 
 ### To print
@@ -101,7 +101,7 @@ PLA or PETG. Volumes are of the solid parts as modelled; with the usual walls an
 
 ## Wiring
 
-| ESP32-S3 | ULN2003 / button |
+| ESP32-S3 | ULN2003 / touch |
 |---|---|
 | GPIO 4, 5, 6, 7 | IN1, IN2, IN3, IN4 |
 | 5V | + (leave the jumper on) |
@@ -176,10 +176,10 @@ ESP32-S3-DevKitC-1. Open the folder in the pioarduino IDE and use Upload, or fro
 `~/.pioarduino/penv/Scripts/pio run -t upload` and then `... pio device monitor` (with `PLATFORMIO_CORE_DIR` set to
 `~/.pioarduino`). Use the board's UART ("COM") USB-C port, both to flash and for the serial commands.
 
-- Button: a short press starts or stops, with the ramp; a double press reverses. Held while stopped, it starts and
-  speeds up to full speed (20 s per turn); held while turning, it slows down to the slowest (600 s per turn); on
-  release the speed stays where it got to, about 6 s from end to end. The RGB LED is green or blue while turning, by
-  direction.
+- Start/stop touch (TTP223 on GPIO 15, active low): a short touch starts or stops, with the ramp; a double touch
+  reverses. Held while stopped, it starts and speeds up to full speed (20 s per turn); held while turning, it slows
+  down to the slowest (600 s per turn); on release the speed stays where it got to, about 6 s from end to end. The
+  RGB LED is green or blue while turning, by direction.
 - Commands, one per line, over USB serial at 115200 or over Bluetooth LE: `run`, `stop`, `speed <seconds per turn>`
   (20–600, default 40, also while turning), `accel <deg/s²>` (the ramps, 1–100, default 13), `dir <1|-1>`,
   `reverse`, `turn <degrees>`, `goto <degrees> [1|-1]` (the shorter way, or in the given direction), `zero`,

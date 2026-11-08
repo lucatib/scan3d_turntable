@@ -1,7 +1,8 @@
 // Scan3D turntable: a 28BYJ-48 on a ULN2003 board turns the platter through a 16:64 gear pair.
 //
-// Button: a short press starts or stops with the ramp, a double press reverses; holding it while stopped starts and
-// speeds up to full speed, holding it while turning slows down to the slowest speed (the speed reached stays).
+// Start/stop touch (TTP223 with pad A, low while touched; or any push button to GND): a short touch starts or stops
+// with the ramp, a double touch reverses; held while stopped it starts and speeds up to full speed, held while turning
+// it slows down to the slowest speed (the speed reached stays).
 // The same text commands, one per line, over USB serial (115200) and over Bluetooth LE: Nordic UART Service, device
 // "Scan3D Turntable"; write commands to RX 6E400002-..., replies are notified on TX 6E400003-... in chunks of up to
 // 20 bytes, each line ending in \n.
@@ -26,7 +27,7 @@
 namespace {
 
 constexpr uint8_t COIL_PINS[4] = {4, 5, 6, 7};  // ULN2003 IN1..IN4
-constexpr uint8_t BUTTON_PIN = 15;              // to GND, internal pull-up
+constexpr uint8_t BUTTON_PIN = 15;              // TTP223 I/O, pad A (low while touched); or a button to GND
 
 // The 28BYJ-48 gearbox is 63.684:1, not 64: 4075.77 half steps per motor turn. The gears add 64/16.
 constexpr double HALF_STEPS_PER_TURN = 4075.7728 * 64.0 / 16.0;
