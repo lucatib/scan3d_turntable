@@ -988,5 +988,8 @@ def run(_context):
     esp_model(root)
     motor_model(root)
     uln_model(root)
+    # Back to parametric so Fusion shows the timeline and records any edits made by hand from here on (a new run of
+    # the script starts over in direct modelling and drops that history).
+    design.designType = adsk.fusion.DesignTypes.ParametricDesignType
     print(f"{len(printed)} printed parts, {len(filled)} filled + {len(rings)} ring inserts; "
           f"stand post at y = {py:.1f} mm")
