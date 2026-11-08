@@ -661,12 +661,18 @@ def jaw(root, sx, gap):
     return move(body, *cradle_origin())
 
 
+KNOB_SPACER = 3.0           # cylinder under each knob: it bears on the surface, the grip stands clear of it
+
+
 def knob(root, d, h, nut_af, nut_depth, hole_d):
-    body = cyl(0, 0, 0, h, d)
+    """Gripped knob with the nut pressed in from the top, on a KNOB_SPACER cylinder (hole + 7 mm across)."""
+    sp = KNOB_SPACER
+    body = cyl(0, 0, sp, sp + h, d)
     for k in range(8):
         x, y = pol(d / 2 + 2, 2 * math.pi * k / 8)
-        cut(body, cyl(x, y, -1, h + 1, 8))
-    cut(body, cyl(0, 0, -1, h + 1, hole_d), prisms(root, [hexagon(nut_af)], h - nut_depth, nut_depth + 1)[0])
+        cut(body, cyl(x, y, sp - 1, sp + h + 1, 8))
+    union(body, cyl(0, 0, 0, sp + 0.1, hole_d + 7))
+    cut(body, cyl(0, 0, -1, sp + h + 1, hole_d), prisms(root, [hexagon(nut_af)], sp + h - nut_depth, nut_depth + 1)[0])
     return body
 
 

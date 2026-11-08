@@ -47,7 +47,7 @@ face. Also try the M5 and M6 nuts in one Pomello M5 and Pomello M6, which you ne
 | Torre | any | foot on the bed |
 | Supporto piastra | any | front face on the bed: hinge ears up, no supports |
 | Ganascia sinistra, Ganascia destra | any | outer face on the bed, so the V groove prints without supports |
-| Pomello M6, Pomello M5 | any | nut pocket up; press the nut in |
+| Pomello M6, Pomello M5 | any | nut pocket up; press the nut in. Each knob stands on a 3 mm spacer cylinder that bears on the surface |
 | Pomelli ganasce (2) | any | the M5 knob again, one per jaw |
 | Scritta Start | contrasting (optional) | flat, 0.4 mm nozzle, 0.2 mm layers; every stroke is at least 0.8 mm wide. Glue into the engraving |
 | Dado asse | any | collar down, 100 % infill: the M8 bolt cuts its thread in it |
@@ -71,9 +71,9 @@ marks where the piece must stand. Insert fit is `INSERT_CLEAR` (0.15 mm radial).
 | 2 | M3 × 8 screw | motor ears, into the plate's printed M3 threads (no nuts) |  |
 | 4 | M3 × 6 self-tapping screw | ULN2003 board to its standoffs |  |
 | 2 | M4 × 16 screw + M4 nut | arm to the base (nuts in the pockets inside the base) |  |
-| 1 | M6 × 25 hex bolt + M6 nut | tower to the arm (head in the arm's channel, nut in the M6 knob) |  |
+| 1 | M6 × 30 hex bolt + M6 nut | tower to the arm (head in the arm's channel, nut in the M6 knob) |  |
 | 1 | M5 × 35 screw + M5 nut | tilt axis (nut in the M5 knob) |  |
-| 2 | M5 × 20 hex bolt + M5 nut | jaws (head in the jaw, nut in the jaw knob) |  |
+| 2 | M5 × 25 hex bolt + M5 nut | jaws (head in the jaw, nut in the jaw knob) |  |
 | 1 | TTP223 capacitive touch module, 15 × 11 mm, 2.5–5.5 V | start/stop, behind the base wall | [Gebildet, Amazon.it](https://www.amazon.it/dp/B0FPQZN4N9): €6.99 for 30 |
 | 1 | 1/4"-20 hex nut (7/16" across flats) | tripod adapter (optional) |  |
 | ~9 | Dupont female–female jumper wires | ESP32 to ULN2003 (IN1–IN4, 5 V, GND) and to the touch module (I/O, 3V3, GND) |  |
