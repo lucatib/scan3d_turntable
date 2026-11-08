@@ -92,11 +92,11 @@ PLA or PETG. Volumes are of the solid parts as modelled; with the usual walls an
 | Braccio | 1 | any | 74.7 | 93 |
 | Torre | 1 | any | 39.3 | 49 |
 | Supporto piastra | 1 | any | 25.6 | 32 |
-| Ganascia sinistra, Ganascia destra | 1 + 1 | any | 35.7 | 44 |
+| Ganascia sinistra, Ganascia destra | 1 + 1 | any | 33.8 | 42 |
 | Pomello torre | 1 | any | 5.0 | 6 |
 | Pomello M5 + Pomelli ganasce | 1 + 2 | any | 10.3 | 13 |
 | Attacco treppiede (optional) | 1 | any | 16.1 | 20 |
-| **Turntable and stand** | | | **824** | **≈ 1020** |
+| **Turntable and stand** | | | **822** | **≈ 1020** |
 | Test prints (`Prova ...`, all eight) | | any | 100 | 124 |
 
 ## Wiring
@@ -215,9 +215,12 @@ ESP32-S3-DevKitC-1. Open the folder in the pioarduino IDE and use Upload, or fro
   its bolt while you tighten the knob; the phone's face can be about 130–290 mm from the platter centre
   (250 mm as modelled, for TrueDepth). The tilt axis is 70 mm above the table; the cradle tilts from 15° back to 55°
   forward without touching the tower, checked with all three reference phones.
-- The cradle holds the phone by its long edges, standing on the two jaws' feet, both faces free: screen towards the
+- The cradle holds the phone by its long edges, clamped in the jaws' V grooves, both faces free: screen towards the
   platter for the front camera (TrueDepth on the iPhone), back towards it for the rear cameras (and the iPhone's
   LiDAR). Each jaw's back is a C that rides on the plate's top and bottom edges (0.2 mm clearance) and runs on 14 mm
   past the jaw, so it slides along the plate and turns less than 1° round its bolt; the knobs behind the plate clamp
   it. Their V grooves (20 mm open, 4 mm deep) centre the phone whatever its thickness, so the camera stays over the same point. The bottom middle is
-  free for the charging cable. The reference phones are in `PHONES` at the top of the script.
+  free for the charging cable. The jaws have no feet: the phone can sit at any height in the grooves, its bottom
+  level with the jaws' as modelled or lower still for a lower view. The tilt range above is checked at that height;
+  the lower the phone, the sooner its bottom meets the tower when tilted forward. The reference phones are in
+  `PHONES` at the top of the script.

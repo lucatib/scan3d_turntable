@@ -127,7 +127,8 @@ SLIDER_EXT = 14.0           # the C runs on past the jaw's outer side: a longer 
 PLATE_HALF_W = 66.0
 PLATE_T = 6.0
 PLATE_H = 30.0
-FOOT_H = 4.0                # the phone stands on the jaws' feet
+PHONE_Z = 0.0               # the phone's bottom above the jaws' bottom, as modelled: no feet, the V grooves hold it
+                            # by its edges at any height, lower still for a lower view
 HINGE_Z = 70.0              # tilt axis height above the table
 HINGE_BACK = 13.0           # tilt axis behind the cradle's back face (the M5 knob, Ø24, has to clear it)
 CAMERA_DISTANCE = 250.0     # default phone position: platter centre to the phone's face
@@ -664,11 +665,9 @@ def jaw(root, sx, gap):
     xc, zc = sx * (gap / 2 + JAW_BOLT_X), PLATE_H / 2
     front = -(PHONE_T_MAX / 2 + 1)
     body = box(min(x_in, x_out), max(x_in, x_out), front, JAW_FRONT, 0, JAW_H)
-    x_foot = x_in - sx * 10
-    union(body, box(min(x_in, x_foot), max(x_in, x_foot), -GROOVE_OPEN / 2, GROOVE_OPEN / 2, 0, FOOT_H))
     v = [(x_in, -GROOVE_OPEN / 2), (x_in + sx * GROOVE_DEPTH, 0), (x_in, GROOVE_OPEN / 2)]
     groove = prisms(root, [v + [(x_in - sx * 1, GROOVE_OPEN / 2), (x_in - sx * 1, -GROOVE_OPEN / 2)]],
-                    FOOT_H, JAW_H)[0]
+                    -1, JAW_H + 2)[0]
     # M5 bolt from the front: head on the jaw's front face, shank threaded right through the jaw, out of the back
     # through the plate's slot into the knob's nut.
     x0, x1 = sorted((x_in, x_out + sx * SLIDER_EXT))
@@ -699,9 +698,9 @@ def knob(root, d, h, nut_af, nut_depth, hole_d):
 
 def phone_dummy(w, t, h, bump):
     """Screen towards the platter (+Y), so seen from the back its left edge is -X."""
-    st, top = t / 2, FOOT_H + h
+    st, top = t / 2, PHONE_Z + h
     x0, x1, z0, z1, out = bump
-    body = box(-w / 2, w / 2, -st, st, FOOT_H, top)
+    body = box(-w / 2, w / 2, -st, st, PHONE_Z, top)
     if out > 0:
         union(body, box(-w / 2 + x0, -w / 2 + x1, -st - out, -st + 0.1, top - z1, top - z0))
     return move(body, *cradle_origin())
@@ -782,7 +781,7 @@ def motor_dummy():
 # (part, radius, axis direction, a point on the axis, axis extent from that point), world mm. apply_fillets finds the
 # sharp edge each one rounded (parallel to its axis, between r and 2.2 r from it) and fillets it again. The right
 # jaw's are listed; the left jaw gets them mirrored in X. The jaw's outer side and the plate's ends moved out after
-# that (JAW_T 10 -> 13, PLATE_HALF_W 64 -> 66) and their entries with them.
+# that (JAW_T 10 -> 13, PLATE_HALF_W 64 -> 66) and their entries with them; the jaws' feet went, with their fillets.
 FILLETS = [
 ('Braccio', 2.0, (0.0, 0.0, -1.0), (-13.0, -363.0, 5.0), -5.0, 5.0),
 ('Braccio', 2.0, (1.0, 0.0, 0.0), (0.0, -363.0, 8.0), -15.0, 15.0),
@@ -800,10 +799,8 @@ FILLETS = [
 ('Supporto piastra', 2.0, (0.0, -1.0, 0.0), (64.0, -266.825, 60.0), -3.0, 3.0),
 ('Supporto piastra', 2.0, (0.0, 1.0, -0.0), (64.0, -266.825, 86.0), -3.0, 3.0),
 ] + [("Ganascia destra", 1.0) + f for f in [
-    ((-1.0, 0.0, 0.0), (28.28, -244.825, 61.0), -5.4, 5.0),
     ((0.0, -1.0, 0.0), (59.28, -266.775, 56.0), -4.95, 3.05),
     ((1.0, 0.0, -0.0), (46.78, -261.825, 56.0), -12.5, 12.5),
-    ((-0.0, -1.0, 0.0), (32.28, -259.8, 57.0), 2.025, 3.025),
     ((0.0, 1.0, -0.0), (59.28, -266.775, 90.0), -3.05, 4.95),
     ((-0.0, 0.0, -1.0), (59.28, -261.825, 73.075), -16.925, 17.075),
     ((1.0, 0.0, -0.0), (44.78, -264.825, 92.0), -10.5, 0.5),
@@ -818,12 +815,9 @@ FILLETS = [
     ((0.0, 0.0, -1.0), (34.28, -261.825, 56.475), -0.525, 0.475),
     ((0.0, 1.0, 0.0), (34.28, -266.775, 56.0), -3.05, 4.95),
     ((0.0, 1.0, 0.0), (34.28, -252.825, 59.0), 8.0, 11.0),
-    ((-1.0, 0.0, 0.0), (38.28, -262.825, 59.0), 6.0, 15.0),
     ((0.0, -1.0, 0.0), (34.28, -259.8, 90.0), 5.025, 10.025),
     ((1.0, 0.0, 0.0), (45.28, -268.825, 90.0), -12.0, 15.0),
     ((-1.0, 0.0, 0.0), (45.28, -268.825, 56.0), -15.0, 12.0),
-    ((1.0, 0.0, -0.0), (33.28, -244.825, 59.0), -10.0, 1.0),
-    ((0.0, 1.0, 0.0), (24.28, -253.325, 59.0), -10.5, 9.5),
     ((0.0, 1.0, -0.0), (45.28, -252.825, 117.0), -11.0, 11.0),
 ]]
 FILLETS += [("Ganascia sinistra", r, (-a[0], a[1], a[2]), (-p[0], p[1], p[2]), t0, t1)
