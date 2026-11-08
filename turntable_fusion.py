@@ -132,9 +132,10 @@ HINGE_BACK = 13.0           # tilt axis behind the cradle's back face (the M5 kn
 CAMERA_DISTANCE = 250.0     # default phone position: platter centre to the phone's face
 ARM_LEN = 240.0
 ARM_PLATE_T = 8.0           # the arm's end plate against the base's pad
-ARM_SCREW_HOLE = 4.0        # two M4 socket-head screws, threaded into the base's pad (modelled M4x0.7 thread)
-ARM_THREAD = ("ISO Metric profile", "M4x0.7", "6H")
-ARM_SCREW_HEAD = (7.5, 4.2) # counterbore in the arm's plate for the heads: diameter, depth (M4 socket head 7 x 4)
+ARM_SCREW_HOLE = 5.0        # two M5 socket-head screws, threaded into the base's pad (modelled M5x0.8 thread)
+ARM_THREAD = ("ISO Metric profile", "M5x0.8", "6H")
+ARM_SCREW_CLEAR = 5.5       # their clearance hole in the arm's plate
+ARM_SCREW_HEAD = (9.5, 5.2) # counterbore in the arm's plate for the heads: diameter, depth (M5 socket head 8.5 x 5)
 ARM_PAD_IN = 106.0          # the base's pad reaches in to y = -ARM_PAD_IN: 13 mm of thread
 # Tripod adapter: the cradle moves from the tower onto it with the same M5 bolt and knob, and keeps its tilt.
 TRIPOD_NUT_AF = 11.4        # 1/4"-20 hex nut (7/16" across flats), slid in from the side
@@ -394,7 +395,7 @@ def base(root):
     cut(body, *[radial(b, TOUCH_ANGLE) for b in cuts])
     cut(body, *touch_label(root))
 
-    # Flat pad for the stand's arm on -Y: two M4 socket-head screws thread into it (holes threaded after building).
+    # Flat pad for the stand's arm on -Y: two M5 socket-head screws thread into it (holes threaded after building).
     union(body, box(-25, 25, -119, -ARM_PAD_IN, 0, 30))
     for x in (-15, 15):
         cut(body, cyl_pts((x, -120, 15), (x, -ARM_PAD_IN + 1, 15), ARM_SCREW_HOLE))
@@ -577,7 +578,7 @@ def arm(root):
     for x in (-15, 15):
         # Clearance hole, and a counterbore from the front so the socket heads go in flush. The gusset is cut back
         # around it so a hex key reaches straight in.
-        cut(body, cyl_pts((x, yp - 1, 15), (x, -118, 15), 4.5), cyl_pts((x, yp - 30, 15), (x, yp + hh, 15), hd))
+        cut(body, cyl_pts((x, yp - 1, 15), (x, -118, 15), ARM_SCREW_CLEAR), cyl_pts((x, yp - 30, 15), (x, yp + hh, 15), hd))
     s0, s1 = ARM_SLOT
     cut(body, box(-3.25, 3.25, s0, s1, -1, 11), cyl(0, s0, -1, 11, 6.5), cyl(0, s1, -1, 11, 6.5),
         box(-5.2, 5.2, y_end - 1, s1 + 3, -1, 4.5))      # channel for the M6 head, open at the far end
