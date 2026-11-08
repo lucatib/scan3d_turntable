@@ -113,17 +113,18 @@ PHONES = [
 PHONE_T_MAX = 18.0          # thickest phone (with its case) the jaws take
 GROOVE_OPEN = 20.0          # V groove: width at the jaw's face
 GROOVE_DEPTH = 4.0
-JAW_T = 10.0                # jaw, across
+JAW_T = 13.0                # jaw, across
+JAW_BOLT_X = GROOVE_DEPTH + 2.0 + 2.5   # the M5's axis from the jaw's face: 2 mm of wall past the V groove's bottom
 JAW_H = 60.0
 JAW_FRONT = 12.0            # jaw reach in front of the phone's middle plane
-JAW_SLOT = (28.0, 56.0)     # bolt travel along each slot, from the plate centre: jaw faces 46..102 mm apart
+JAW_SLOT = (31.5, 59.5)     # bolt travel along each slot, from the plate centre: jaw faces 46..102 mm apart
 JAW_THREAD_HOLE = 5.0       # M5 hole right through each jaw (front to back), modelled M5x0.8 thread
 JAW_HEAD_POCKET = (8.2, 4.0)  # hex recess for the tilt bolt's head in its boss, like the knobs' (across flats, depth)
 JAW_THREAD = ("ISO Metric profile", "M5x0.8", "6H")
 JAW_FLANGE = 2.8            # the jaw's back is a C that rides on the plate's top and bottom edges: slides, cannot turn
 PLATE_CLEAR = 0.2           # between the C and the plate's edges
 SLIDER_EXT = 14.0           # the C runs on past the jaw's outer side: a longer slider turns less in its clearance
-PLATE_HALF_W = 64.0
+PLATE_HALF_W = 66.0
 PLATE_T = 6.0
 PLATE_H = 30.0
 FOOT_H = 4.0                # the phone stands on the jaws' feet
@@ -660,7 +661,7 @@ def cradle_plate(root):
 def jaw(root, sx, gap):
     """The jaw on side sx (+1 / -1), its face gap / 2 from the middle."""
     x_in, x_out = sx * gap / 2, sx * (gap / 2 + JAW_T)
-    xc, zc = sx * (gap / 2 + JAW_T / 2), PLATE_H / 2
+    xc, zc = sx * (gap / 2 + JAW_BOLT_X), PLATE_H / 2
     front = -(PHONE_T_MAX / 2 + 1)
     body = box(min(x_in, x_out), max(x_in, x_out), front, JAW_FRONT, 0, JAW_H)
     x_foot = x_in - sx * 10
@@ -708,7 +709,7 @@ def phone_dummy(w, t, h, bump):
 
 def jaw_knob(root, sx, gap):
     knob5 = knob(root, 24, 10, 8.2, 4.5, 5.3)
-    xc = sx * (gap / 2 + JAW_T / 2)
+    xc = sx * (gap / 2 + JAW_BOLT_X)
     o = cradle_origin()
     return frame(knob5, (o[0] + xc, o[1] - plate_back(), o[2] + PLATE_H / 2), (1, 0, 0), (0, 0, 1), (0, -1, 0))
 
@@ -780,7 +781,8 @@ def motor_dummy():
 # Fillets made by hand in Fusion on 2026-11-08 and read back from the model, so a rebuild keeps them:
 # (part, radius, axis direction, a point on the axis, axis extent from that point), world mm. apply_fillets finds the
 # sharp edge each one rounded (parallel to its axis, between r and 2.2 r from it) and fillets it again. The right
-# jaw's are listed; the left jaw gets them mirrored in X.
+# jaw's are listed; the left jaw gets them mirrored in X. The jaw's outer side and the plate's ends moved out after
+# that (JAW_T 10 -> 13, PLATE_HALF_W 64 -> 66) and their entries with them.
 FILLETS = [
 ('Braccio', 2.0, (0.0, 0.0, -1.0), (-13.0, -363.0, 5.0), -5.0, 5.0),
 ('Braccio', 2.0, (1.0, 0.0, 0.0), (0.0, -363.0, 8.0), -15.0, 15.0),
@@ -793,36 +795,36 @@ FILLETS = [
 ('Braccio', 2.0, (0.0, 0.0, -1.0), (17.0, -129.0, 10.0), -0.692, 10.0),
 ('Braccio', 3.0, (0.0, -1.0, 0.0), (-22.0, -123.0, 27.0), -4.0, 4.0),
 ('Braccio', 3.0, (0.0, 1.0, -0.0), (22.0, -123.0, 27.0), -4.0, 4.0),
-('Supporto piastra', 2.0, (0.0, -1.0, 0.0), (-62.0, -266.825, 86.0), -3.0, 3.0),
-('Supporto piastra', 2.0, (0.0, 1.0, 0.0), (-62.0, -266.825, 60.0), -3.0, 3.0),
-('Supporto piastra', 2.0, (0.0, -1.0, 0.0), (62.0, -266.825, 60.0), -3.0, 3.0),
-('Supporto piastra', 2.0, (0.0, 1.0, -0.0), (62.0, -266.825, 86.0), -3.0, 3.0),
+('Supporto piastra', 2.0, (0.0, -1.0, 0.0), (-64.0, -266.825, 86.0), -3.0, 3.0),
+('Supporto piastra', 2.0, (0.0, 1.0, 0.0), (-64.0, -266.825, 60.0), -3.0, 3.0),
+('Supporto piastra', 2.0, (0.0, -1.0, 0.0), (64.0, -266.825, 60.0), -3.0, 3.0),
+('Supporto piastra', 2.0, (0.0, 1.0, -0.0), (64.0, -266.825, 86.0), -3.0, 3.0),
 ] + [("Ganascia destra", 1.0) + f for f in [
     ((-1.0, 0.0, 0.0), (28.28, -244.825, 61.0), -5.4, 5.0),
-    ((0.0, -1.0, 0.0), (56.28, -266.775, 56.0), -4.95, 3.05),
-    ((1.0, 0.0, -0.0), (45.28, -261.825, 56.0), -11.0, 11.0),
+    ((0.0, -1.0, 0.0), (59.28, -266.775, 56.0), -4.95, 3.05),
+    ((1.0, 0.0, -0.0), (46.78, -261.825, 56.0), -12.5, 12.5),
     ((-0.0, -1.0, 0.0), (32.28, -259.8, 57.0), 2.025, 3.025),
-    ((0.0, 1.0, -0.0), (56.28, -266.775, 90.0), -3.05, 4.95),
-    ((-0.0, 0.0, -1.0), (56.28, -261.825, 73.075), -16.925, 17.075),
-    ((1.0, 0.0, -0.0), (41.78, -264.825, 92.0), -7.5, 0.5),
-    ((-0.0, 1.0, 0.0), (44.28, -259.8, 92.0), -3.025, -2.025),
-    ((0.0, 0.0, -1.0), (42.28, -262.825, 88.0), -30.0, -4.0),
-    ((-1.0, 0.0, 0.0), (45.28, -261.825, 90.0), -11.0, 1.0),
-    ((-0.0, 0.0, -1.0), (44.28, -259.825, 72.275), -17.725, 13.275),
-    ((-1.0, 0.0, 0.0), (41.78, -259.825, 57.0), -0.5, 7.5),
-    ((0.0, -1.0, 0.0), (42.28, -252.825, 59.0), -10.0, 7.0),
-    ((1.0, 0.0, -0.0), (38.28, -242.825, 59.0), -5.0, 4.0),
-    ((-0.0, 0.0, -1.0), (42.28, -242.825, 88.0), -30.0, 29.0),
+    ((0.0, 1.0, -0.0), (59.28, -266.775, 90.0), -3.05, 4.95),
+    ((-0.0, 0.0, -1.0), (59.28, -261.825, 73.075), -16.925, 17.075),
+    ((1.0, 0.0, -0.0), (44.78, -264.825, 92.0), -10.5, 0.5),
+    ((-0.0, 1.0, 0.0), (47.28, -259.8, 92.0), -3.025, -2.025),
+    ((0.0, 0.0, -1.0), (45.28, -262.825, 88.0), -30.0, -4.0),
+    ((-1.0, 0.0, 0.0), (48.28, -261.825, 90.0), -11.0, 1.0),
+    ((-0.0, 0.0, -1.0), (47.28, -259.825, 72.275), -17.725, 13.275),
+    ((-1.0, 0.0, 0.0), (44.78, -259.825, 57.0), -0.5, 10.5),
+    ((0.0, -1.0, 0.0), (45.28, -252.825, 59.0), -10.0, 7.0),
+    ((1.0, 0.0, -0.0), (41.28, -242.825, 59.0), -8.0, 4.0),
+    ((-0.0, 0.0, -1.0), (45.28, -242.825, 88.0), -30.0, 29.0),
     ((0.0, 0.0, -1.0), (34.28, -261.825, 56.475), -0.525, 0.475),
     ((0.0, 1.0, 0.0), (34.28, -266.775, 56.0), -3.05, 4.95),
     ((0.0, 1.0, 0.0), (34.28, -252.825, 59.0), 8.0, 11.0),
     ((-1.0, 0.0, 0.0), (38.28, -262.825, 59.0), 6.0, 15.0),
     ((0.0, -1.0, 0.0), (34.28, -259.8, 90.0), 5.025, 10.025),
-    ((1.0, 0.0, 0.0), (45.28, -268.825, 90.0), -12.0, 12.0),
-    ((-1.0, 0.0, 0.0), (45.28, -268.825, 56.0), -12.0, 12.0),
+    ((1.0, 0.0, 0.0), (45.28, -268.825, 90.0), -12.0, 15.0),
+    ((-1.0, 0.0, 0.0), (45.28, -268.825, 56.0), -15.0, 12.0),
     ((1.0, 0.0, -0.0), (33.28, -244.825, 59.0), -10.0, 1.0),
     ((0.0, 1.0, 0.0), (24.28, -253.325, 59.0), -10.5, 9.5),
-    ((0.0, 1.0, -0.0), (42.28, -252.825, 117.0), -11.0, 11.0),
+    ((0.0, 1.0, -0.0), (45.28, -252.825, 117.0), -11.0, 11.0),
 ]]
 FILLETS += [("Ganascia sinistra", r, (-a[0], a[1], a[2]), (-p[0], p[1], p[2]), t0, t1)
             for name, r, a, p, t0, t1 in FILLETS if name == "Ganascia destra"]
@@ -910,7 +912,7 @@ def test_slots(root):
     lo, hi = -PLATE_CLEAR, PLATE_H + PLATE_CLEAR
     jaw_cut = union(box(0, JAW_T, front, 10, lo - JAW_FLANGE, hi + JAW_FLANGE),
                     box(0, JAW_T, back, front + 0.1, hi, hi + JAW_FLANGE), box(0, JAW_T, back, front + 0.1, lo - JAW_FLANGE, lo))
-    cut(jaw_cut, cyl_pts((JAW_T / 2, front - 1, zc), (JAW_T / 2, 11, zc), JAW_THREAD_HOLE))
+    cut(jaw_cut, cyl_pts((JAW_BOLT_X, front - 1, zc), (JAW_BOLT_X, 11, zc), JAW_THREAD_HOLE))
     jaw_piece = frame(jaw_cut, (50, 20, JAW_T), (0, 0, -1), (0, 1, 0), (1, 0, 0))
     sw, (cw, cd) = TOWER_BOLT / 2, TOWER_HEAD
     arm_piece = move(cut(box(80, 110, 0, 30, 0, 10), box(95 - sw, 95 + sw, 5, 25, -1, 11), box(95 - cw / 2, 95 + cw / 2, -1, 31, -1, cd)),
