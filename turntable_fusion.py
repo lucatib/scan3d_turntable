@@ -116,7 +116,7 @@ GROOVE_DEPTH = 4.0
 JAW_T = 13.0                # jaw, across
 JAW_BOLT_X = GROOVE_DEPTH + 2.0 + 2.5   # the M5's axis from the jaw's face: 2 mm of wall past the V groove's bottom
 JAW_H = 60.0
-JAW_FRONT = 12.0            # jaw reach in front of the phone's middle plane
+JAW_FRONT = 9.0             # jaw reach in front of the phone's middle plane: flush with the thickest phone's face
 JAW_SLOT = (31.5, 59.5)     # bolt travel along each slot, from the plate centre: jaw faces 46..102 mm apart
 JAW_THREAD_HOLE = 5.0       # M5 hole right through each jaw (front to back), modelled M5x0.8 thread
 JAW_HEAD_POCKET = (8.2, 4.0)  # hex recess for the tilt bolt's head in its boss, like the knobs' (across flats, depth)
@@ -781,7 +781,8 @@ def motor_dummy():
 # (part, radius, axis direction, a point on the axis, axis extent from that point), world mm. apply_fillets finds the
 # sharp edge each one rounded (parallel to its axis, between r and 2.2 r from it) and fillets it again. The right
 # jaw's are listed; the left jaw gets them mirrored in X. The jaw's outer side and the plate's ends moved out after
-# that (JAW_T 10 -> 13, PLATE_HALF_W 64 -> 66) and their entries with them; the jaws' feet went, with their fillets.
+# that (JAW_T 10 -> 13, PLATE_HALF_W 64 -> 66) and their entries with them; the jaws' feet went, with their fillets;
+# the jaws' front came back 3 mm (JAW_FRONT 12 -> 9).
 FILLETS = [
 ('Braccio', 2.0, (0.0, 0.0, -1.0), (-13.0, -363.0, 5.0), -5.0, 5.0),
 ('Braccio', 2.0, (1.0, 0.0, 0.0), (0.0, -363.0, 8.0), -15.0, 15.0),
@@ -810,11 +811,10 @@ FILLETS = [
     ((-0.0, 0.0, -1.0), (47.28, -259.825, 72.275), -17.725, 13.275),
     ((-1.0, 0.0, 0.0), (44.78, -259.825, 57.0), -0.5, 10.5),
     ((0.0, -1.0, 0.0), (45.28, -252.825, 59.0), -10.0, 7.0),
-    ((1.0, 0.0, -0.0), (41.28, -242.825, 59.0), -8.0, 4.0),
-    ((-0.0, 0.0, -1.0), (45.28, -242.825, 88.0), -30.0, 29.0),
+    ((1.0, 0.0, -0.0), (41.28, -245.825, 59.0), -8.0, 4.0),
+    ((-0.0, 0.0, -1.0), (45.28, -245.825, 88.0), -30.0, 29.0),
     ((0.0, 0.0, -1.0), (34.28, -261.825, 56.475), -0.525, 0.475),
     ((0.0, 1.0, 0.0), (34.28, -266.775, 56.0), -3.05, 4.95),
-    ((0.0, 1.0, 0.0), (34.28, -252.825, 59.0), 8.0, 11.0),
     ((0.0, -1.0, 0.0), (34.28, -259.8, 90.0), 5.025, 10.025),
     ((1.0, 0.0, 0.0), (45.28, -268.825, 90.0), -12.0, 15.0),
     ((-1.0, 0.0, 0.0), (45.28, -268.825, 56.0), -15.0, 12.0),

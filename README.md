@@ -73,7 +73,7 @@ marks where the piece must stand. Insert fit is `INSERT_CLEAR` (0.15 mm radial).
 | 2 | M5 × 16 socket-head (Allen) screw | arm to the base: heads sunk in the arm's plate (Ø 9.5 counterbores), threaded into the base's pad (modelled M5 thread, 13 mm) |  |
 | 1 | M5 × 30 hex bolt + M5 nut | tower to the arm (head in the arm's channel, nut in the tower knob) |  |
 | 1 | M5 × 30 hex bolt + M5 nut | tilt axis: head in the hex recess on the cradle's left ear, screwed through its printed M5 thread, nut in the M5 knob |  |
-| 2 | M5 × 40 hex bolt + M5 nut | jaws: head on the jaw's front, threaded right through the jaw, nut in the jaw knob |  |
+| 2 | M5 × 40 hex bolt + M5 nut | jaws: head on the jaw's front, threaded right through the jaw, nut in the jaw knob (its end stands 2 mm out of the knob) |  |
 | 1 | TTP223 capacitive touch module, 15 × 11 mm, 2.5–5.5 V | start/stop, behind the base wall | [Gebildet, Amazon.it](https://www.amazon.it/dp/B0FPQZN4N9): €6.99 for 30 |
 | 1 | 1/4"-20 hex nut (7/16" across flats) | tripod adapter (optional) |  |
 | ~9 | Dupont female–female jumper wires | ESP32 to ULN2003 (IN1–IN4, 5 V, GND) and to the touch module (I/O, 3V3, GND) |  |
@@ -92,11 +92,11 @@ PLA or PETG. Volumes are of the solid parts as modelled; with the usual walls an
 | Braccio | 1 | any | 74.7 | 93 |
 | Torre | 1 | any | 39.3 | 49 |
 | Supporto piastra | 1 | any | 25.6 | 32 |
-| Ganascia sinistra, Ganascia destra | 1 + 1 | any | 33.8 | 42 |
+| Ganascia sinistra, Ganascia destra | 1 + 1 | any | 29.2 | 36 |
 | Pomello torre | 1 | any | 5.0 | 6 |
 | Pomello M5 + Pomelli ganasce | 1 + 2 | any | 10.3 | 13 |
 | Attacco treppiede (optional) | 1 | any | 16.1 | 20 |
-| **Turntable and stand** | | | **822** | **≈ 1020** |
+| **Turntable and stand** | | | **818** | **≈ 1015** |
 | Test prints (`Prova ...`, all eight) | | any | 100 | 124 |
 
 ## Wiring
