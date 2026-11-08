@@ -156,10 +156,10 @@ the WROOM module overhanging the far end by 6.4 mm, two USB-C at the near end.
 The board sits pins down, level with the touch module (PCB 17.3–18.8 mm up), with about 15 mm under it: enough for
 the pins with right-angle Dupont plugs or soldered wires, not for straight Dupont plugs. It rests on two ribs between the
 pin rows, its far end against a stop that stays under the module's overhang, and four snap lips over its long edges
-(outside the pins' solder joints) hold it down: press it in from above. Its USB-C ports face a 25 mm opening (bottom corners rounded, r 4) in the
-wall, open at the top and narrower than the board: plugging in pushes the board against the stop, pulling out pulls
-it against the wall beside the opening. Checked on the model: nothing touches it in place, and 0.2–0.5 mm of play in
-any direction brings the PCB, never a component, against the holder. The platter's rim covers the opening.
+(outside the pins' solder joints) hold it down: press it in from above. Its USB-C ports face a closed window in the wall,
+25 × 9 mm with 3 mm round corners, centred on the two ports and narrower than the board: plugging in pushes the board
+against the stop, pulling out pulls it against the wall beside the window. Checked on the model: nothing touches it in place, and 0.2–0.5 mm of play in
+any direction brings the PCB, never a component, against the holder.
 
 ![USB opening](usb.png)
 

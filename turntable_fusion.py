@@ -93,8 +93,9 @@ ESP_PIN_X = 12.7            # pin rows, from the board's middle; header plastic 
 # and right-angle Dupont plugs or soldered wires, not for straight Dupont plugs.
 ESP_USB_X = -111.2          # the board's USB end, just inside the wall
 ESP_SNAPS = (10.0, 46.0)    # snap lips along the board, from its USB end
-USB_NOTCH_W = 25.0          # the opening for the plugs; narrower than the board
-USB_NOTCH_R = 4.0           # its bottom corners' radius
+USB_WINDOW = (25.0, 9.0, 3.0)   # window for the plugs, centred on the USB-C ports: width (narrower than the
+                                # board), height, corner radius
+USB_CENTRE_UP = 1.18        # the ports' middle above the PCB's top (devkit model)
 
 # --- Phone stand --------------------------------------------------------------------------------------------------
 # Adjustable cradle: a back plate with two slots, and two jaws with a V groove that take the phone's edges, whatever
@@ -512,11 +513,15 @@ def esp_holder():
         for ly in ESP_SNAPS:
             adds += [box(x0 + ly - 3, x0 + ly + 3, y_post[0], y_post[1], 0, top + 0.9),
                      box(x0 + ly - 3, x0 + ly + 3, y_lip[0], y_lip[1], top + 0.3, top + 0.9)]
-    # Open at the top (under the platter's rim), bottom corners rounded.
-    r, w2, zb = USB_NOTCH_R, USB_NOTCH_W / 2, h - 3
-    cuts = [box(-BASE_D, x0, -w2, w2, zb + r, BASE_TOP + 1), box(-BASE_D, x0, -w2 + r, w2 - r, zb, BASE_TOP + 1),
-            cyl_pts((-BASE_D, -w2 + r, zb + r), (x0, -w2 + r, zb + r), 2 * r),
-            cyl_pts((-BASE_D, w2 - r, zb + r), (x0, w2 - r, zb + r), 2 * r)]
+    # A closed window with rounded corners, symmetric about the ports.
+    w, wh, r = USB_WINDOW
+    zc = top + USB_CENTRE_UP
+    w2, h2 = w / 2, wh / 2
+    cuts = [box(-BASE_D, x0, -w2, w2, zc - h2 + r, zc + h2 - r), box(-BASE_D, x0, -w2 + r, w2 - r, zc - h2, zc + h2)]
+    for sy in (-1, 1):
+        for sz in (-1, 1):
+            y, z = sy * (w2 - r), zc + sz * (h2 - r)
+            cuts.append(cyl_pts((-BASE_D, y, z), (x0, y, z), 2 * r))
     return adds, cuts
 
 
