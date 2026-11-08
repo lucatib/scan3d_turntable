@@ -117,6 +117,9 @@ JAW_T = 10.0                # jaw, across
 JAW_H = 60.0
 JAW_FRONT = 12.0            # jaw reach in front of the phone's middle plane
 JAW_SLOT = (28.0, 56.0)     # bolt travel along each slot, from the plate centre: jaw faces 46..102 mm apart
+JAW_THREAD_HOLE = 5.0       # blind M5 hole in each jaw's back, modelled M5x0.8 thread
+JAW_THREAD_DEPTH = 6.0
+JAW_THREAD = ("ISO Metric profile", "M5x0.8", "6H")
 JAW_FLANGE = 2.8            # the jaw's back is a C that rides on the plate's top and bottom edges: slides, cannot turn
 PLATE_CLEAR = 0.2           # between the C and the plate's edges
 SLIDER_EXT = 14.0           # the C runs on past the jaw's outer side: a longer slider turns less in its clearance
@@ -648,8 +651,7 @@ def jaw(root, sx, gap):
     v = [(x_in, -GROOVE_OPEN / 2), (x_in + sx * GROOVE_DEPTH, 0), (x_in, GROOVE_OPEN / 2)]
     groove = prisms(root, [v + [(x_in - sx * 1, GROOVE_OPEN / 2), (x_in - sx * 1, -GROOVE_OPEN / 2)]],
                     FOOT_H, JAW_H)[0]
-    # M5 bolt: hex head in a slot open to the groove face, shank out of the back through the plate's slot.
-    head = box(min(x_in - sx, xc + sx * 4.1), max(x_in - sx, xc + sx * 4.1), front + 3, front + 6.8, zc - 4.8, zc + 4.8)
+    # Blind M5 hole in the back, threaded JAW_THREAD_DEPTH deep: the knob's bolt comes through the plate's slot into it.
     x0, x1 = sorted((x_in, x_out + sx * SLIDER_EXT))
     xe0, xe1 = sorted((x_out - sx * 0.1, x_out + sx * SLIDER_EXT))
     lo, hi = -PLATE_CLEAR, PLATE_H + PLATE_CLEAR
@@ -657,7 +659,7 @@ def jaw(root, sx, gap):
           box(x0, x1, -plate_back(), front + 0.1, lo - JAW_FLANGE, lo),                # under its bottom edge
           box(x0, x1, front, front + 3, lo - JAW_FLANGE, 0.1),                         # web under the jaw
           box(xe0, xe1, front, front + 3, lo - JAW_FLANGE, hi + JAW_FLANGE))           # web of the extension
-    cut(body, groove, head, cyl_pts((xc, front - 1, zc), (xc, front + 5, zc), 5.3))
+    cut(body, groove, cyl_pts((xc, front - 1, zc), (xc, front + JAW_THREAD_DEPTH, zc), JAW_THREAD_HOLE))
     return move(body, *cradle_origin())
 
 
@@ -839,8 +841,7 @@ def test_slots():
     lo, hi = -PLATE_CLEAR, PLATE_H + PLATE_CLEAR
     jaw_cut = union(box(0, JAW_T, front, 10, lo - JAW_FLANGE, hi + JAW_FLANGE),
                     box(0, JAW_T, back, front + 0.1, hi, hi + JAW_FLANGE), box(0, JAW_T, back, front + 0.1, lo - JAW_FLANGE, lo))
-    cut(jaw_cut, box(-1, JAW_T / 2 + 4.1, front + 3, front + 6.8, zc - 4.8, zc + 4.8),
-        cyl_pts((JAW_T / 2, front - 1, zc), (JAW_T / 2, front + 5, zc), 5.3))
+    cut(jaw_cut, cyl_pts((JAW_T / 2, front - 1, zc), (JAW_T / 2, front + JAW_THREAD_DEPTH, zc), JAW_THREAD_HOLE))
     jaw_piece = frame(jaw_cut, (50, 20, JAW_T), (0, 0, -1), (0, 1, 0), (1, 0, 0))
     arm_piece = move(cut(box(80, 110, 0, 30, 0, 10), box(91.75, 98.25, 5, 25, -1, 11), box(89.8, 100.2, -1, 31, -1, 4.5)),
                      15, 0, 0)
@@ -901,11 +902,10 @@ def test_parts(root):
 
 
 def thread_holes(root, part, diameter, thread):
-    """Puts a modelled internal thread in every hole of that diameter in the part's body."""
+    """Puts a modelled internal thread in every hole of that diameter in the part's bodies."""
     comp = next(o.component for o in root.occurrences if o.component.name == part)
-    body = comp.bRepBodies.item(0)
-    faces = [f for f in body.faces if isinstance(f.geometry, adsk.core.Cylinder)
-             and abs(f.geometry.radius * 20 - diameter) < 1e-3]
+    faces = [f for i in range(comp.bRepBodies.count) for f in comp.bRepBodies.item(i).faces
+             if isinstance(f.geometry, adsk.core.Cylinder) and abs(f.geometry.radius * 20 - diameter) < 1e-3]
     if not faces:
         return 0
     feats = comp.features.threadFeatures
@@ -963,6 +963,8 @@ def run(_context):
         add_part(root, name, bodies)
     for name in ("Base", "Prova motore"):
         thread_holes(root, name, MOTOR_SCREW_HOLE, MOTOR_THREAD)
+    for name in ("Ganascia sinistra", "Ganascia destra", "Prova asole"):
+        thread_holes(root, name, JAW_THREAD_HOLE, JAW_THREAD)
     esp_model(root)
     motor_model(root)
     uln_model(root)
