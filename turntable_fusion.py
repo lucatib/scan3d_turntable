@@ -143,7 +143,7 @@ TRIPOD_NUT_T = 5.9
 TRIPOD_AXIS_UP = 35.0       # tilt axis above the block: the cradle and the phone swing down to ~31 mm below it
 TRIPOD_SHOW = (-220.0, 0.0) # where it is shown, on the table beside the stand (x, offset from the tower in y)
 ARM_SLOT = (-355.0, -203.0)
-TOWER_BOLT = 5.5            # M5 x 35 hex bolt (as the tilt axis): slot in the arm and hole in the tower's foot
+TOWER_BOLT = 5.5            # M5 x 30 hex bolt (as the tilt axis): slot in the arm and hole in the tower's foot
 TOWER_HEAD = (8.4, 4.0)     # channel under the arm for its head (width against the head's 8 mm flats, depth)
 
 app = adsk.core.Application.get()
@@ -955,7 +955,7 @@ def run(_context):
 
     filled, rings = inserts()
     py = post_y()
-    knob_tower = move(knob(root, 24, 14, 8.2, 4.5, 5.3), 0, py - 35, 18)   # M5, 4 mm taller: the M5 x 35 ends in it
+    knob_tower = move(knob(root, 24, 10, 8.2, 4.5, 5.3), 0, py - 35, 18)   # M5, 10 mm grip; the M5 x 30 ends in its nut
     knob5 = frame(knob(root, 24, 6, 8.2, 4.5, 5.3), (9.7, py, HINGE_Z), (0, 1, 0), (0, 0, 1), (1, 0, 0))
     printed = [
         ("Base", [base(root)]),
