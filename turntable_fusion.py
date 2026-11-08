@@ -117,8 +117,8 @@ JAW_T = 10.0                # jaw, across
 JAW_H = 60.0
 JAW_FRONT = 12.0            # jaw reach in front of the phone's middle plane
 JAW_SLOT = (28.0, 56.0)     # bolt travel along each slot, from the plate centre: jaw faces 46..102 mm apart
-JAW_THREAD_HOLE = 5.0       # blind M5 hole in each jaw's back, modelled M5x0.8 thread
-JAW_THREAD_DEPTH = 6.0
+JAW_THREAD_HOLE = 5.0       # M5 hole right through each jaw (front to back), modelled M5x0.8 thread
+JAW_HEAD_POCKET = (8.2, 4.0)  # hex recess for the bolt's head in the jaw's front, like the knobs' (across flats, depth)
 JAW_THREAD = ("ISO Metric profile", "M5x0.8", "6H")
 JAW_FLANGE = 2.8            # the jaw's back is a C that rides on the plate's top and bottom edges: slides, cannot turn
 PLATE_CLEAR = 0.2           # between the C and the plate's edges
@@ -622,7 +622,7 @@ def jaw_gap(w, t):
     return w - 2 * GROOVE_DEPTH * (1 - t / GROOVE_OPEN)
 
 
-def cradle_plate():
+def cradle_plate(root):
     front, back = -(PHONE_T_MAX / 2 + 1), -plate_back()
     zc = PLATE_H / 2
     body = box(-PLATE_HALF_W, PLATE_HALF_W, back, front, 0, PLATE_H)
@@ -635,8 +635,12 @@ def cradle_plate():
     for sx in (-1, 1):
         x0, x1 = sorted((sx * 4.2, sx * 9.2))
         union(body, box(x0, x1, hy, back + 0.5, 2, 22), cyl_pts((x0, hy, 12), (x1, hy, 12), 20))
+    # The tilt bolt's head sits in a hex recess in a boss on the left ear (the knob and its nut are on the right).
+    af, pd = JAW_HEAD_POCKET
+    union(body, cyl_pts((-9.2 - pd, hy, 12), (-9.1, hy, 12), 14))
+    head = frame(prisms(root, [hexagon(af)], 0, pd + 1)[0], (-9.2, hy, 12), (0, 1, 0), (0, 0, 1), (-1, 0, 0))
     # Tilted forward, the plate's bottom swings back over the tower's tab: a notch lets it through.
-    cut(body, cyl_pts((-10, hy, 12), (10, hy, 12), 5.3), box(-4.2, 4.2, back - 1, front + 1, -1, 8))
+    cut(body, cyl_pts((-10 - pd, hy, 12), (10, hy, 12), 5.3), box(-4.2, 4.2, back - 1, front + 1, -1, 8), head)
     return move(body, *cradle_origin())
 
 
@@ -651,7 +655,8 @@ def jaw(root, sx, gap):
     v = [(x_in, -GROOVE_OPEN / 2), (x_in + sx * GROOVE_DEPTH, 0), (x_in, GROOVE_OPEN / 2)]
     groove = prisms(root, [v + [(x_in - sx * 1, GROOVE_OPEN / 2), (x_in - sx * 1, -GROOVE_OPEN / 2)]],
                     FOOT_H, JAW_H)[0]
-    # Blind M5 hole in the back, threaded JAW_THREAD_DEPTH deep: the knob's bolt comes through the plate's slot into it.
+    # M5 bolt from the front: head in a hex recess, shank threaded right through the jaw, out of the back through the
+    # plate's slot into the knob's nut.
     x0, x1 = sorted((x_in, x_out + sx * SLIDER_EXT))
     xe0, xe1 = sorted((x_out - sx * 0.1, x_out + sx * SLIDER_EXT))
     lo, hi = -PLATE_CLEAR, PLATE_H + PLATE_CLEAR
@@ -659,7 +664,9 @@ def jaw(root, sx, gap):
           box(x0, x1, -plate_back(), front + 0.1, lo - JAW_FLANGE, lo),                # under its bottom edge
           box(x0, x1, front, front + 3, lo - JAW_FLANGE, 0.1),                         # web under the jaw
           box(xe0, xe1, front, front + 3, lo - JAW_FLANGE, hi + JAW_FLANGE))           # web of the extension
-    cut(body, groove, cyl_pts((xc, front - 1, zc), (xc, front + JAW_THREAD_DEPTH, zc), JAW_THREAD_HOLE))
+    af, pd = JAW_HEAD_POCKET
+    pocket = frame(prisms(root, [hexagon(af)], 0, pd + 1)[0], (xc, JAW_FRONT - pd, zc), (1, 0, 0), (0, 0, -1), (0, 1, 0))
+    cut(body, groove, cyl_pts((xc, front - 1, zc), (xc, JAW_FRONT + 1, zc), JAW_THREAD_HOLE), pocket)
     return move(body, *cradle_origin())
 
 
@@ -831,7 +838,7 @@ def test_motor_plate():
                cyl(0, -y, -1, bl + 5, MOTOR_SCREW_HOLE), cyl(0, y, -1, bl + 5, MOTOR_SCREW_HOLE))
 
 
-def test_slots():
+def test_slots(root):
     """The cradle plate's slot, a jaw's bolt-head slot (printed on its outer face, as the jaw) and the arm's channel."""
     zc = PLATE_H / 2
     plate = cut(box(0, 40, 0, PLATE_H, 0, PLATE_T), box(10, 30, zc - 2.7, zc + 2.7, -1, PLATE_T + 1),
@@ -841,7 +848,9 @@ def test_slots():
     lo, hi = -PLATE_CLEAR, PLATE_H + PLATE_CLEAR
     jaw_cut = union(box(0, JAW_T, front, 10, lo - JAW_FLANGE, hi + JAW_FLANGE),
                     box(0, JAW_T, back, front + 0.1, hi, hi + JAW_FLANGE), box(0, JAW_T, back, front + 0.1, lo - JAW_FLANGE, lo))
-    cut(jaw_cut, cyl_pts((JAW_T / 2, front - 1, zc), (JAW_T / 2, front + JAW_THREAD_DEPTH, zc), JAW_THREAD_HOLE))
+    af, pd = JAW_HEAD_POCKET
+    pocket = frame(prisms(root, [hexagon(af)], 0, pd + 1)[0], (JAW_T / 2, 10 - pd, zc), (1, 0, 0), (0, 0, -1), (0, 1, 0))
+    cut(jaw_cut, cyl_pts((JAW_T / 2, front - 1, zc), (JAW_T / 2, 11, zc), JAW_THREAD_HOLE), pocket)
     jaw_piece = frame(jaw_cut, (50, 20, JAW_T), (0, 0, -1), (0, 1, 0), (1, 0, 0))
     arm_piece = move(cut(box(80, 110, 0, 30, 0, 10), box(91.75, 98.25, 5, 25, -1, 11), box(89.8, 100.2, -1, 31, -1, 4.5)),
                      15, 0, 0)
@@ -887,7 +896,7 @@ def test_parts(root):
         ("Prova cuscinetti", [test_bearing(root)]),
         ("Prova pignoni", test_pinions(root)),
         ("Prova motore", [move(test_motor_plate(), 24, 27, 0)]),
-        ("Prova asole", test_slots()),
+        ("Prova asole", test_slots(root)),
         ("Prova ESP32", [test_esp()]),
         ("Prova ULN2003", [test_uln()]),
         ("Prova touch", [test_touch()]),
@@ -950,7 +959,7 @@ def run(_context):
     name, w, t, h, bump = PHONES[0]
     gap = jaw_gap(w, t)
     printed += [
-        ("Supporto piastra", [cradle_plate()]),
+        ("Supporto piastra", [cradle_plate(root)]),
         ("Ganascia sinistra", [jaw(root, -1, gap)]),
         ("Ganascia destra", [jaw(root, 1, gap)]),
         ("Pomelli ganasce", [jaw_knob(root, -1, gap), jaw_knob(root, 1, gap)]),
