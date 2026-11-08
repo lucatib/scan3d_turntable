@@ -777,6 +777,57 @@ def motor_dummy():
                  cyl(sx, 0, t, t + 1.5, 9), cyl(sx, 0, t + 1.5, t + 10, 5))
 
 
+# Fillets made by hand in Fusion on 2026-11-08 and read back from the model, so a rebuild keeps them:
+# (part, radius, axis direction, a point on the axis, axis extent from that point), world mm. apply_fillets finds the
+# sharp edge each one rounded (parallel to its axis, between r and 2.2 r from it) and fillets it again. The right
+# jaw's are listed; the left jaw gets them mirrored in X.
+FILLETS = [
+('Braccio', 2.0, (0.0, 0.0, -1.0), (-13.0, -363.0, 5.0), -5.0, 5.0),
+('Braccio', 2.0, (1.0, 0.0, 0.0), (0.0, -363.0, 8.0), -15.0, 15.0),
+('Braccio', 2.0, (0.0, 0.0, -1.0), (13.0, -363.0, 5.0), -5.0, 5.0),
+('Braccio', 2.0, (0.0, -0.7809, -0.6247), (13.0, -166.909, -4.489), -48.547, -40.002),
+('Braccio', 2.0, (0.0, 0.0, -1.0), (17.0, -129.0, 10.0), -19.039, -9.308),
+('Braccio', 2.0, (0.0, -0.7809, -0.6247), (-13.0, -166.909, -4.489), -48.547, -40.002),
+('Braccio', 2.0, (0.0, -0.0, 1.0), (-17.0, -129.0, 10.0), 9.308, 19.039),
+('Braccio', 2.0, (0.0, -0.0, 1.0), (-17.0, -129.0, 10.0), -10.0, 0.692),
+('Braccio', 2.0, (0.0, 0.0, -1.0), (17.0, -129.0, 10.0), -0.692, 10.0),
+('Braccio', 3.0, (0.0, -1.0, 0.0), (-22.0, -123.0, 27.0), -4.0, 4.0),
+('Braccio', 3.0, (0.0, 1.0, -0.0), (22.0, -123.0, 27.0), -4.0, 4.0),
+('Supporto piastra', 2.0, (0.0, -1.0, 0.0), (-62.0, -266.825, 86.0), -3.0, 3.0),
+('Supporto piastra', 2.0, (0.0, 1.0, 0.0), (-62.0, -266.825, 60.0), -3.0, 3.0),
+('Supporto piastra', 2.0, (0.0, -1.0, 0.0), (62.0, -266.825, 60.0), -3.0, 3.0),
+('Supporto piastra', 2.0, (0.0, 1.0, -0.0), (62.0, -266.825, 86.0), -3.0, 3.0),
+] + [("Ganascia destra", 1.0) + f for f in [
+    ((-1.0, 0.0, 0.0), (28.28, -244.825, 61.0), -5.4, 5.0),
+    ((0.0, -1.0, 0.0), (56.28, -266.775, 56.0), -4.95, 3.05),
+    ((1.0, 0.0, -0.0), (45.28, -261.825, 56.0), -11.0, 11.0),
+    ((-0.0, -1.0, 0.0), (32.28, -259.8, 57.0), 2.025, 3.025),
+    ((0.0, 1.0, -0.0), (56.28, -266.775, 90.0), -3.05, 4.95),
+    ((-0.0, 0.0, -1.0), (56.28, -261.825, 73.075), -16.925, 17.075),
+    ((1.0, 0.0, -0.0), (41.78, -264.825, 92.0), -7.5, 0.5),
+    ((-0.0, 1.0, 0.0), (44.28, -259.8, 92.0), -3.025, -2.025),
+    ((0.0, 0.0, -1.0), (42.28, -262.825, 88.0), -30.0, -4.0),
+    ((-1.0, 0.0, 0.0), (45.28, -261.825, 90.0), -11.0, 1.0),
+    ((-0.0, 0.0, -1.0), (44.28, -259.825, 72.275), -17.725, 13.275),
+    ((-1.0, 0.0, 0.0), (41.78, -259.825, 57.0), -0.5, 7.5),
+    ((0.0, -1.0, 0.0), (42.28, -252.825, 59.0), -10.0, 7.0),
+    ((1.0, 0.0, -0.0), (38.28, -242.825, 59.0), -5.0, 4.0),
+    ((-0.0, 0.0, -1.0), (42.28, -242.825, 88.0), -30.0, 29.0),
+    ((0.0, 0.0, -1.0), (34.28, -261.825, 56.475), -0.525, 0.475),
+    ((0.0, 1.0, 0.0), (34.28, -266.775, 56.0), -3.05, 4.95),
+    ((0.0, 1.0, 0.0), (34.28, -252.825, 59.0), 8.0, 11.0),
+    ((-1.0, 0.0, 0.0), (38.28, -262.825, 59.0), 6.0, 15.0),
+    ((0.0, -1.0, 0.0), (34.28, -259.8, 90.0), 5.025, 10.025),
+    ((1.0, 0.0, 0.0), (45.28, -268.825, 90.0), -12.0, 12.0),
+    ((-1.0, 0.0, 0.0), (45.28, -268.825, 56.0), -12.0, 12.0),
+    ((1.0, 0.0, -0.0), (33.28, -244.825, 59.0), -10.0, 1.0),
+    ((0.0, 1.0, 0.0), (24.28, -253.325, 59.0), -10.5, 9.5),
+    ((0.0, 1.0, -0.0), (42.28, -252.825, 117.0), -11.0, 11.0),
+]]
+FILLETS += [("Ganascia sinistra", r, (-a[0], a[1], a[2]), (-p[0], p[1], p[2]), t0, t1)
+            for name, r, a, p, t0, t1 in FILLETS if name == "Ganascia destra"]
+
+
 # --- Test prints --------------------------------------------------------------------------------------------------
 # Small pieces to set the fits on your printer before the long prints. Each ladder has three steps, marked with 1, 2
 # and 3 dimples; put the step that fits into the matching parameter above.
@@ -920,6 +971,52 @@ def test_parts(root):
     return parts
 
 
+def apply_fillets(root):
+    """Re-applies FILLETS to the freshly built parts; prints any that no longer find their edge."""
+    groups, missing = {}, []
+    for part, r, a, p, t0, t1 in FILLETS:
+        occs = [o for o in root.occurrences if o.component.name == part]
+        if not occs:
+            missing.append(part)
+            continue
+        body = occs[0].component.bRepBodies.item(0)
+        ax = adsk.core.Vector3D.create(*a)
+        ax.normalize()
+        best, best_d = None, None
+        for e in body.edges:
+            g = e.geometry
+            if not isinstance(g, adsk.core.Line3D):
+                continue
+            d = g.startPoint.vectorTo(g.endPoint)
+            if d.length < 1e-6:
+                continue
+            d.normalize()
+            if abs(d.dotProduct(ax)) < 0.999:
+                continue
+            ts, dist = [], 0
+            for q in (g.startPoint, g.endPoint):
+                v = adsk.core.Vector3D.create(q.x * 10 - p[0], q.y * 10 - p[1], q.z * 10 - p[2])
+                t = v.dotProduct(ax)
+                ts.append(t)
+                perp = adsk.core.Vector3D.create(v.x - ax.x * t, v.y - ax.y * t, v.z - ax.z * t)
+                dist = max(dist, perp.length)
+            if not (r * 0.99 < dist < r * 2.2) or max(ts) < t0 - r or min(ts) > t1 + r:
+                continue
+            if best is None or dist < best_d:
+                best, best_d = e, dist
+        if best is None:
+            missing.append(f"{part} r{r} at {p}")
+            continue
+        groups.setdefault((part, r), (occs[0].component, adsk.core.ObjectCollection.create()))[1].add(best)
+    for (part, r), (comp, edges) in groups.items():
+        inp = comp.features.filletFeatures.createInput()
+        inp.edgeSetInputs.addConstantRadiusEdgeSet(edges, adsk.core.ValueInput.createByReal(r / 10), False)
+        comp.features.filletFeatures.add(inp)
+    if missing:
+        print("fillets not found:", missing)
+    return len(FILLETS) - len(missing)
+
+
 def thread_holes(root, part, diameter, thread):
     """Puts a modelled internal thread in every hole of that diameter in the part's bodies."""
     comp = next(o.component for o in root.occurrences if o.component.name == part)
@@ -980,6 +1077,7 @@ def run(_context):
 
     for name, bodies in printed + reference + test_parts(root):
         add_part(root, name, bodies)
+    n_fillets = apply_fillets(root)
     for name in ("Base", "Prova motore"):
         thread_holes(root, name, MOTOR_SCREW_HOLE, MOTOR_THREAD)
     thread_holes(root, "Base", ARM_SCREW_HOLE, ARM_THREAD)
@@ -991,5 +1089,6 @@ def run(_context):
     # Back to parametric so Fusion shows the timeline and records any edits made by hand from here on (a new run of
     # the script starts over in direct modelling and drops that history).
     design.designType = adsk.fusion.DesignTypes.ParametricDesignType
+    print(f"{n_fillets}/{len(FILLETS)} hand fillets re-applied")
     print(f"{len(printed)} printed parts, {len(filled)} filled + {len(rings)} ring inserts; "
           f"stand post at y = {py:.1f} mm")
