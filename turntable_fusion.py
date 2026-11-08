@@ -131,6 +131,11 @@ HINGE_Z = 70.0              # tilt axis height above the table
 HINGE_BACK = 13.0           # tilt axis behind the cradle's back face (the M5 knob, Ø24, has to clear it)
 CAMERA_DISTANCE = 250.0     # default phone position: platter centre to the phone's face
 ARM_LEN = 240.0
+ARM_PLATE_T = 8.0           # the arm's end plate against the base's pad
+ARM_SCREW_HOLE = 4.0        # two M4 socket-head screws, threaded into the base's pad (modelled M4x0.7 thread)
+ARM_THREAD = ("ISO Metric profile", "M4x0.7", "6H")
+ARM_SCREW_HEAD = (7.5, 4.2) # counterbore in the arm's plate for the heads: diameter, depth (M4 socket head 7 x 4)
+ARM_PAD_IN = 106.0          # the base's pad reaches in to y = -ARM_PAD_IN: 13 mm of thread
 # Tripod adapter: the cradle moves from the tower onto it with the same M5 bolt and knob, and keeps its tilt.
 TRIPOD_NUT_AF = 11.4        # 1/4"-20 hex nut (7/16" across flats), slid in from the side
 TRIPOD_NUT_T = 5.9
@@ -389,12 +394,10 @@ def base(root):
     cut(body, *[radial(b, TOUCH_ANGLE) for b in cuts])
     cut(body, *touch_label(root))
 
-    # Flat pad for the stand's arm on -Y: two M4 screws, nuts from inside.
-    union(body, box(-25, 25, -119, -108, 0, 30))
+    # Flat pad for the stand's arm on -Y: two M4 socket-head screws thread into it (holes threaded after building).
+    union(body, box(-25, 25, -119, -ARM_PAD_IN, 0, 30))
     for x in (-15, 15):
-        cut(body, cyl_pts((x, -125, 15), (x, -100, 15), 4.3))
-        nut = prisms(root, [hexagon(7.1)], 0, 3.7)[0]
-        cut(body, frame(nut, (x, -111.6, 15), (1, 0, 0), (0, 0, -1), (0, 1, 0)))
+        cut(body, cyl_pts((x, -120, 15), (x, -ARM_PAD_IN + 1, 15), ARM_SCREW_HOLE))
     return body
 
 
@@ -566,11 +569,15 @@ def post_y():
 
 def arm(root):
     y_end = -125 - ARM_LEN
-    body = union(box(-25, 25, -125, -119, 0, 30), box(-15, 15, y_end, -119, 0, 10))
-    gusset = prisms(root, [[(-125, 10), (-125, 30), (-150, 10)]], 0, 30)[0]
+    yp = -119 - ARM_PLATE_T                   # the plate's front face
+    body = union(box(-25, 25, yp, -119, 0, 30), box(-15, 15, y_end, -119, 0, 10))
+    gusset = prisms(root, [[(yp, 10), (yp, 30), (yp - 25, 10)]], 0, 30)[0]
     union(body, frame(gusset, (-15, 0, 0), (0, 1, 0), (0, 0, 1), (1, 0, 0)))
+    hd, hh = ARM_SCREW_HEAD
     for x in (-15, 15):
-        cut(body, cyl_pts((x, -130, 15), (x, -110, 15), 4.3))
+        # Clearance hole, and a counterbore from the front so the socket heads go in flush. The gusset is cut back
+        # around it so a hex key reaches straight in.
+        cut(body, cyl_pts((x, yp - 1, 15), (x, -118, 15), 4.5), cyl_pts((x, yp - 30, 15), (x, yp + hh, 15), hd))
     s0, s1 = ARM_SLOT
     cut(body, box(-3.25, 3.25, s0, s1, -1, 11), cyl(0, s0, -1, 11, 6.5), cyl(0, s1, -1, 11, 6.5),
         box(-5.2, 5.2, y_end - 1, s1 + 3, -1, 4.5))      # channel for the M6 head, open at the far end
@@ -972,6 +979,7 @@ def run(_context):
         add_part(root, name, bodies)
     for name in ("Base", "Prova motore"):
         thread_holes(root, name, MOTOR_SCREW_HOLE, MOTOR_THREAD)
+    thread_holes(root, "Base", ARM_SCREW_HOLE, ARM_THREAD)
     for name in ("Ganascia sinistra", "Ganascia destra", "Prova asole"):
         thread_holes(root, name, JAW_THREAD_HOLE, JAW_THREAD)
     esp_model(root)
