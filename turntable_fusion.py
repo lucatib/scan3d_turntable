@@ -142,7 +142,9 @@ TRIPOD_NUT_AF = 11.4        # 1/4"-20 hex nut (7/16" across flats), slid in from
 TRIPOD_NUT_T = 5.9
 TRIPOD_AXIS_UP = 35.0       # tilt axis above the block: the cradle and the phone swing down to ~31 mm below it
 TRIPOD_SHOW = (-220.0, 0.0) # where it is shown, on the table beside the stand (x, offset from the tower in y)
-ARM_SLOT = (-355.0, -200.0)
+ARM_SLOT = (-355.0, -203.0)
+TOWER_BOLT = 5.5            # M5 x 35 hex bolt (as the tilt axis): slot in the arm and hole in the tower's foot
+TOWER_HEAD = (8.4, 4.0)     # channel under the arm for its head (width against the head's 8 mm flats, depth)
 
 app = adsk.core.Application.get()
 tbm = adsk.fusion.TemporaryBRepManager.get()
@@ -580,8 +582,9 @@ def arm(root):
         # around it so a hex key reaches straight in.
         cut(body, cyl_pts((x, yp - 1, 15), (x, -118, 15), ARM_SCREW_CLEAR), cyl_pts((x, yp - 30, 15), (x, yp + hh, 15), hd))
     s0, s1 = ARM_SLOT
-    cut(body, box(-3.25, 3.25, s0, s1, -1, 11), cyl(0, s0, -1, 11, 6.5), cyl(0, s1, -1, 11, 6.5),
-        box(-5.2, 5.2, y_end - 1, s1 + 3, -1, 4.5))      # channel for the M6 head, open at the far end
+    sw, (cw, cd) = TOWER_BOLT / 2, TOWER_HEAD
+    cut(body, box(-sw, sw, s0, s1, -1, 11), cyl(0, s0, -1, 11, TOWER_BOLT), cyl(0, s1, -1, 11, TOWER_BOLT),
+        box(-cw / 2, cw / 2, y_end - 1, s1 + 3, -1, cd))      # channel for the bolt's head, open at the far end
     return body
 
 
@@ -594,7 +597,7 @@ def tower(root):
     # Skirts down both sides of the arm: the foot slides along it and cannot turn round the bolt.
     for sx in (-1, 1):
         union(body, box(min(sx * 15.3, sx * 22), max(sx * 15.3, sx * 22), py - 45, py + 15, 1, 10.1))
-    cut(body, cyl(0, py - 35, 0, 30, 6.5), cyl_pts((-6, py, HINGE_Z), (6, py, HINGE_Z), 5.3))
+    cut(body, cyl(0, py - 35, 0, 30, TOWER_BOLT), cyl_pts((-6, py, HINGE_Z), (6, py, HINGE_Z), 5.3))
     return body
 
 
@@ -860,7 +863,8 @@ def test_slots(root):
     pocket = frame(prisms(root, [hexagon(af)], 0, pd + 1)[0], (JAW_T / 2, 10 - pd, zc), (1, 0, 0), (0, 0, -1), (0, 1, 0))
     cut(jaw_cut, cyl_pts((JAW_T / 2, front - 1, zc), (JAW_T / 2, 11, zc), JAW_THREAD_HOLE), pocket)
     jaw_piece = frame(jaw_cut, (50, 20, JAW_T), (0, 0, -1), (0, 1, 0), (1, 0, 0))
-    arm_piece = move(cut(box(80, 110, 0, 30, 0, 10), box(91.75, 98.25, 5, 25, -1, 11), box(89.8, 100.2, -1, 31, -1, 4.5)),
+    sw, (cw, cd) = TOWER_BOLT / 2, TOWER_HEAD
+    arm_piece = move(cut(box(80, 110, 0, 30, 0, 10), box(95 - sw, 95 + sw, 5, 25, -1, 11), box(95 - cw / 2, 95 + cw / 2, -1, 31, -1, cd)),
                      15, 0, 0)
     return [plate, jaw_piece, arm_piece]
 
@@ -949,7 +953,7 @@ def run(_context):
 
     filled, rings = inserts()
     py = post_y()
-    knob6 = move(knob(root, 30, 12, 10.2, 5.5, 6.5), 0, py - 35, 18)
+    knob_tower = move(knob(root, 24, 14, 8.2, 4.5, 5.3), 0, py - 35, 18)   # M5, 4 mm taller: the M5 x 35 ends in it
     knob5 = frame(knob(root, 24, 10, 8.2, 4.5, 5.3), (9.7, py, HINGE_Z), (0, 1, 0), (0, 0, 1), (1, 0, 0))
     printed = [
         ("Base", [base(root)]),
@@ -959,7 +963,7 @@ def run(_context):
         ("Pignone", [pinion(root)]),
         ("Braccio", [arm(root)]),
         ("Torre", [tower(root)]),
-        ("Pomello M6", [knob6]),
+        ("Pomello torre", [knob_tower]),
         ("Pomello M5", [knob5]),
     ]
     printed.append(("Dado asse", [axle_nut(root)]))

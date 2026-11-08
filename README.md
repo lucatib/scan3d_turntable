@@ -27,13 +27,13 @@ print the real parts.
 | Prova cuscinetti, bottom row | the M8 bolt's head pressed into the hex from below, not turning | 13.0 / 13.2 / 13.4 across flats | `AXLE_HEAD_AF` |
 | Prova pignoni | pinion on the motor shaft: snug, no wobble, no cracking | bore Ø 5.0 / 5.1 / 5.2, flats 3.0 / 3.1 / 3.2 | `SHAFT_BORE` |
 | Prova motore | the 28BYJ-48 drops through, its blue housing in the notch, the M3 screws go into the printed threads and hold | one size (Ø 28.8, M3 modelled thread) | `MOTOR_BODY_HOLE`, `MOTOR_THREAD` |
-| Prova asole | the jaw slice slides along the plate piece, its C over both edges, without wobbling; an M5 bolt screws into the jaw's printed thread; the M6 head slides in the arm's channel and the bolt in its slot | one size each | `PLATE_CLEAR` |
+| Prova asole | the jaw slice slides along the plate piece, its C over both edges, without wobbling; an M5 bolt screws into the jaw's printed thread; the M5 head slides in the arm's channel and the bolt in its slot | one size each | `PLATE_CLEAR` |
 | Prova touch | the module slides in and stays; a finger on the ring outside triggers it through the 2 mm wall | one size | `TOUCH_WALL` |
 | Prova ULN2003 | the board's four holes on the standoffs, M3 self-tapping screws biting | 30.2 × 26.4 mm hole spacing, the model's | `ULN_HOLES`, `ULN_PILOT` |
 | Prova ESP32 | the board presses down past the four lips onto the ribs, its far end against the stop, and does not move when you plug and pull the cable | one size | `ESP_L`, `ESP_W` |
 
 Print them like the real parts: platter, bearing and motor pieces flat; the jaw piece is already lying on its outer
-face. Also try the M5 and M6 nuts in one Pomello M5 and Pomello M6, which you need anyway.
+face. Also try the M5 nut in one Pomello M5, which you need anyway.
 
 ## Printed parts
 
@@ -47,7 +47,7 @@ face. Also try the M5 and M6 nuts in one Pomello M5 and Pomello M6, which you ne
 | Torre | any | foot on the bed |
 | Supporto piastra | any | front face on the bed: hinge ears up, no supports |
 | Ganascia sinistra, Ganascia destra | any | outer face on the bed, so the V groove prints without supports |
-| Pomello M6, Pomello M5 | any | nut pocket up; press the nut in. Each knob stands on a 3 mm spacer cylinder that bears on the surface |
+| Pomello torre, Pomello M5 | any | nut pocket up; press the nut in. Each knob stands on a 3 mm spacer cylinder that bears on the surface |
 | Pomelli ganasce (2) | any | the M5 knob again, one per jaw, nut pressed in |
 | Scritta Start | contrasting (optional) | flat, 0.4 mm nozzle, 0.2 mm layers; every stroke is at least 0.8 mm wide. Glue into the engraving |
 | Dado asse | any | collar down, 100 % infill: the M8 bolt cuts its thread in it |
@@ -71,7 +71,7 @@ marks where the piece must stand. Insert fit is `INSERT_CLEAR` (0.15 mm radial).
 | 2 | M3 × 8 screw | motor ears, into the plate's printed M3 threads (no nuts) |  |
 | 4 | M3 × 6 self-tapping screw | ULN2003 board to its standoffs |  |
 | 2 | M5 × 16 socket-head (Allen) screw | arm to the base: heads sunk in the arm's plate (Ø 9.5 counterbores), threaded into the base's pad (modelled M5 thread, 13 mm) |  |
-| 1 | M6 × 30 hex bolt + M6 nut | tower to the arm (head in the arm's channel, nut in the M6 knob) |  |
+| 1 | M5 × 35 hex bolt + M5 nut | tower to the arm (head in the arm's channel, nut in the tower knob) |  |
 | 1 | M5 × 35 hex bolt + M5 nut | tilt axis: head in the hex recess on the cradle's left ear, nut in the M5 knob |  |
 | 2 | M5 × 40 hex bolt + M5 nut | jaws: head in the hex recess in the jaw's front, threaded right through the jaw, nut in the jaw knob |  |
 | 1 | TTP223 capacitive touch module, 15 × 11 mm, 2.5–5.5 V | start/stop, behind the base wall | [Gebildet, Amazon.it](https://www.amazon.it/dp/B0FPQZN4N9): €6.99 for 30 |
@@ -93,7 +93,7 @@ PLA or PETG. Volumes are of the solid parts as modelled; with the usual walls an
 | Torre | 1 | any | 39.3 | 49 |
 | Supporto piastra | 1 | any | 24.5 | 30 |
 | Ganascia sinistra, Ganascia destra | 1 + 1 | any | 27.6 | 34 |
-| Pomello M6 | 1 | any | 6.9 | 9 |
+| Pomello torre | 1 | any | 5.0 | 6 |
 | Pomello M5 + Pomelli ganasce | 1 + 2 | any | 10.3 | 13 |
 | Attacco treppiede (optional) | 1 | any | 16.1 | 20 |
 | **Turntable and stand** | | | **815** | **≈ 1010** |
