@@ -47,7 +47,8 @@ MOTOR_FLATS = (4.6, 10.6)   # the shaft's flats above the plate (motor model)
 MOTOR_EAR_T = 0.8           # the ears are flush with the shaft face
 MOTOR_SHAFT_OFFSET = 8.0    # shaft to body centre
 MOTOR_EAR_HOLES = 35.0
-MOTOR_SCREW_PILOT = 2.5     # M3 screws thread straight into the plastic (no nuts)
+MOTOR_SCREW_HOLE = 3.0      # M3 holes for the motor's ears, threaded (modelled M3x0.5 thread, no nuts)
+MOTOR_THREAD = ("ISO Metric profile", "M3x0.5", "6H")
 MOTOR_BOSS = (6.0, 4.0)     # boss under each hole (diameter, length): 8 mm of thread with the 4 mm plate
 MOTOR_HOUSING = (31.0, 9.5)  # blue cover and wire exit, from the body's centre (reach, half width): the plate's notch
 
@@ -366,8 +367,8 @@ def base(root):
           cyl(mx, -MOTOR_EAR_HOLES / 2, pz0 - bl, pz0 + 0.1, bd), cyl(mx, MOTOR_EAR_HOLES / 2, pz0 - bl, pz0 + 0.1, bd))
     cut(body, cyl(mx, 0, pz0 - 1, MOTOR_PLATE_TOP + 1, MOTOR_BODY_HOLE),
         box(mx, mx + MOTOR_HOUSING[0], -MOTOR_HOUSING[1], MOTOR_HOUSING[1], pz0 - 1, MOTOR_PLATE_TOP + 1),
-        cyl(mx, -MOTOR_EAR_HOLES / 2, pz0 - bl - 1, MOTOR_PLATE_TOP + 1, MOTOR_SCREW_PILOT),
-        cyl(mx, MOTOR_EAR_HOLES / 2, pz0 - bl - 1, MOTOR_PLATE_TOP + 1, MOTOR_SCREW_PILOT))
+        cyl(mx, -MOTOR_EAR_HOLES / 2, pz0 - bl - 1, MOTOR_PLATE_TOP + 1, MOTOR_SCREW_HOLE),
+        cyl(mx, MOTOR_EAR_HOLES / 2, pz0 - bl - 1, MOTOR_PLATE_TOP + 1, MOTOR_SCREW_HOLE))
 
     adds, cuts = esp_holder()
     union(body, *adds)
@@ -819,7 +820,7 @@ def test_motor_plate():
     y = MOTOR_EAR_HOLES / 2
     body = union(box(-24, 32, -27, 27, bl, bl + 4), cyl(0, -y, 0, bl + 0.1, bd), cyl(0, y, 0, bl + 0.1, bd))
     return cut(body, cyl(0, 0, -1, bl + 5, MOTOR_BODY_HOLE), box(0, MOTOR_HOUSING[0], -MOTOR_HOUSING[1], MOTOR_HOUSING[1], -1, bl + 5),
-               cyl(0, -y, -1, bl + 5, MOTOR_SCREW_PILOT), cyl(0, y, -1, bl + 5, MOTOR_SCREW_PILOT))
+               cyl(0, -y, -1, bl + 5, MOTOR_SCREW_HOLE), cyl(0, y, -1, bl + 5, MOTOR_SCREW_HOLE))
 
 
 def test_slots():
@@ -893,6 +894,26 @@ def test_parts(root):
     return parts
 
 
+def thread_holes(root, part, diameter, thread):
+    """Puts a modelled internal thread in every hole of that diameter in the part's body."""
+    comp = next(o.component for o in root.occurrences if o.component.name == part)
+    body = comp.bRepBodies.item(0)
+    faces = [f for f in body.faces if isinstance(f.geometry, adsk.core.Cylinder)
+             and abs(f.geometry.radius * 20 - diameter) < 1e-3]
+    if not faces:
+        return 0
+    feats = comp.features.threadFeatures
+    info = adsk.fusion.ThreadInfo.create(False, True, *thread, True)   # straight, internal, right-handed
+    collection = adsk.core.ObjectCollection.create()
+    for f in faces:
+        collection.add(f)
+    inp = feats.createInput(collection, info)
+    inp.isModeled = True
+    inp.isFullLength = True
+    feats.add(inp)
+    return len(faces)
+
+
 def run(_context):
     design = adsk.fusion.Design.cast(app.activeProduct)
     design.designType = adsk.fusion.DesignTypes.DirectDesignType
@@ -934,6 +955,8 @@ def run(_context):
 
     for name, bodies in printed + reference + test_parts(root):
         add_part(root, name, bodies)
+    for name in ("Base", "Prova motore"):
+        thread_holes(root, name, MOTOR_SCREW_HOLE, MOTOR_THREAD)
     esp_model(root)
     motor_model(root)
     uln_model(root)
