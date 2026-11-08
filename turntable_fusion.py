@@ -47,6 +47,8 @@ MOTOR_FLATS = (4.6, 10.6)   # the shaft's flats above the plate (motor model)
 MOTOR_EAR_T = 0.8           # the ears are flush with the shaft face
 MOTOR_SHAFT_OFFSET = 8.0    # shaft to body centre
 MOTOR_EAR_HOLES = 35.0
+MOTOR_SCREW_PILOT = 2.5     # M3 screws thread straight into the plastic (no nuts)
+MOTOR_BOSS = (6.0, 4.0)     # boss under each hole (diameter, length): 8 mm of thread with the 4 mm plate
 MOTOR_HOUSING = (31.0, 9.5)  # blue cover and wire exit, from the body's centre (reach, half width): the plate's notch
 
 # --- Heights, all from the motor: pinion on the shaft's flats, platter just above it -----------------------------
@@ -358,12 +360,14 @@ def base(root):
     # Motor mount: plate with the body hanging through it, side walls down to the floor, merged into the wall.
     mx = shaft_x() + MOTOR_SHAFT_OFFSET
     pz0 = MOTOR_PLATE_TOP - 4
+    bd, bl = MOTOR_BOSS
     union(body, box(28, 111, -27, 27, pz0, MOTOR_PLATE_TOP),
-          box(28, 111, -27, -24, 0, pz0), box(28, 111, 24, 27, 0, pz0))
+          box(28, 111, -27, -24, 0, pz0), box(28, 111, 24, 27, 0, pz0),
+          cyl(mx, -MOTOR_EAR_HOLES / 2, pz0 - bl, pz0 + 0.1, bd), cyl(mx, MOTOR_EAR_HOLES / 2, pz0 - bl, pz0 + 0.1, bd))
     cut(body, cyl(mx, 0, pz0 - 1, MOTOR_PLATE_TOP + 1, MOTOR_BODY_HOLE),
         box(mx, mx + MOTOR_HOUSING[0], -MOTOR_HOUSING[1], MOTOR_HOUSING[1], pz0 - 1, MOTOR_PLATE_TOP + 1),
-        cyl(mx, -MOTOR_EAR_HOLES / 2, pz0 - 1, MOTOR_PLATE_TOP + 1, 3.3),
-        cyl(mx, MOTOR_EAR_HOLES / 2, pz0 - 1, MOTOR_PLATE_TOP + 1, 3.3))
+        cyl(mx, -MOTOR_EAR_HOLES / 2, pz0 - bl - 1, MOTOR_PLATE_TOP + 1, MOTOR_SCREW_PILOT),
+        cyl(mx, MOTOR_EAR_HOLES / 2, pz0 - bl - 1, MOTOR_PLATE_TOP + 1, MOTOR_SCREW_PILOT))
 
     adds, cuts = esp_holder()
     union(body, *adds)
@@ -811,9 +815,11 @@ def test_pinions(root):
 
 
 def test_motor_plate():
-    body = box(-24, 32, -27, 27, 0, 4)
-    return cut(body, cyl(0, 0, -1, 5, MOTOR_BODY_HOLE), box(0, 24, -9.5, 9.5, -1, 5),
-               cyl(0, -MOTOR_EAR_HOLES / 2, -1, 5, 3.3), cyl(0, MOTOR_EAR_HOLES / 2, -1, 5, 3.3))
+    bd, bl = MOTOR_BOSS
+    y = MOTOR_EAR_HOLES / 2
+    body = union(box(-24, 32, -27, 27, bl, bl + 4), cyl(0, -y, 0, bl + 0.1, bd), cyl(0, y, 0, bl + 0.1, bd))
+    return cut(body, cyl(0, 0, -1, bl + 5, MOTOR_BODY_HOLE), box(0, MOTOR_HOUSING[0], -MOTOR_HOUSING[1], MOTOR_HOUSING[1], -1, bl + 5),
+               cyl(0, -y, -1, bl + 5, MOTOR_SCREW_PILOT), cyl(0, y, -1, bl + 5, MOTOR_SCREW_PILOT))
 
 
 def test_slots():

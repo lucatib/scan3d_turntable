@@ -26,7 +26,7 @@ print the real parts.
 | Prova cuscinetti, top row | a 608ZZ pressed in by hand or with a vice, not loose | Ø 22.00 / 22.15 / 22.30 | `BEARING_OD` |
 | Prova cuscinetti, bottom row | the M8 bolt's head pressed into the hex from below, not turning | 13.0 / 13.2 / 13.4 across flats | `AXLE_HEAD_AF` |
 | Prova pignoni | pinion on the motor shaft: snug, no wobble, no cracking | bore Ø 5.0 / 5.1 / 5.2, flats 3.0 / 3.1 / 3.2 | `SHAFT_BORE` |
-| Prova motore | the 28BYJ-48 drops through, its blue housing in the notch, M3 screws in the ears | one size (Ø 28.8) | `MOTOR_BODY_HOLE` |
+| Prova motore | the 28BYJ-48 drops through, its blue housing in the notch, the M3 screws thread into the bosses and hold | one size (Ø 28.8, Ø 2.5 pilots) | `MOTOR_BODY_HOLE`, `MOTOR_SCREW_PILOT` |
 | Prova asole | the jaw slice slides along the plate piece, its C over both edges, without wobbling; the M5 head sits in the jaw; the M6 head slides in the arm's channel and the bolt in its slot | one size each | `PLATE_CLEAR` |
 | Prova touch | the module slides in and stays; a finger on the ring outside triggers it through the 2 mm wall | one size | `TOUCH_WALL` |
 | Prova ULN2003 | the board's four holes on the standoffs, M3 self-tapping screws biting | 30.2 × 26.4 mm hole spacing, the model's | `ULN_HOLES`, `ULN_PILOT` |
@@ -68,7 +68,7 @@ marks where the piece must stand. Insert fit is `INSERT_CLEAR` (0.15 mm radial).
 | 1 | ESP32-S3-WROOM-1 devkit, 2 × USB-C (57 × 28.3 mm), headers soldered pins down | in its holder in the base | [Binghe S3-DevKitC-1 N16R8, Amazon.it](https://www.amazon.it/dp/B0D6B2CYNW): €24.99 for 3 (Jun 2026) |
 | 2 | 608ZZ bearing (8 × 22 × 7) | pressed into the platter's hub | [YAPKOLV, Amazon.it](https://www.amazon.it/dp/B0F6LHYSS8): €7.49 for 12 (Apr 2026) |
 | 1 | M8 × 30 hex bolt | the axle, head pressed into the hex under the base |  |
-| 2 | M3 × 8 screw + M3 nut | motor ears to the plate |  |
+| 2 | M3 × 8 screw | motor ears, threaded straight into the plate (no nuts) |  |
 | 4 | M3 × 6 self-tapping screw | ULN2003 board to its standoffs |  |
 | 2 | M4 × 16 screw + M4 nut | arm to the base (nuts in the pockets inside the base) |  |
 | 1 | M6 × 25 hex bolt + M6 nut | tower to the arm (head in the arm's channel, nut in the M6 knob) |  |
@@ -138,7 +138,7 @@ Move it with `TOUCH_ANGLE` and `TOUCH_Z`.
 ![Motor and driver](motore_driver.png)
 
 Both are fitted to the models in [models/](models) (from [escornabot/3dmodel](https://github.com/escornabot/3dmodel),
-MIT, see `LICENSE-escornabot`). The 28BYJ-48 hangs from the motor plate with its ears on it, its body 0.5 mm above the floor (M3 screws 35 mm
+MIT, see `LICENSE-escornabot`). The 28BYJ-48 hangs from the motor plate with its ears on it, its body 0.5 mm above the floor (M3 screws, threaded into the plate and a 6 mm boss under each hole, 35 mm
 apart); its blue cover and wire exit reach 30 mm from the body's centre, and the plate's notch runs to 31 mm. The
 pinion's double-D bore is turned to the shaft's flats as the model has them (facing the body's centre), and the
 pinion sits only on the 6 mm of flats (29.7–36 mm above the table). The ULN2003
